@@ -19,8 +19,9 @@ local playerClass
 local killerName
 local killerLevel
 local killerClass
-local logged
 local environment
+
+local logged
 
 function HCDeath.resetVariables()
 	sdate = nil
@@ -48,13 +49,15 @@ function HCDeath.logDeath()
 	if (environment) then killerName = "Natural Causes" end
 	if ((not environment) and (deathType == "PVE")) then killerClass = "NPC" end
 	table.insert(HCDeaths, sdate .. "," .. stime .. "," .. tostring(deathType) .. "," .. tostring(zone) .. ","  .. tostring(playerName) .. "," .. tostring(playerLevel) .. "," .. tostring(playerClass) .. "," .. tostring(killerName) .. "," .. tostring(killerLevel) .. "," .. tostring(killerClass))
-	logged = true
+	local info = ChatTypeInfo["SYSTEM"]
+	DEFAULT_CHAT_FRAME:AddMessage("Hardcore Death Logged (" .. HCDeath.tablelength() .. " Deaths)", info.r, info.g, info.b, info.id)
 	HCDeath.resetVariables()
+	logged = true
 end
 
 function HCDeath.friendSlots()
-	-- the maximum friend limit for a vanilla client is 50.
-	-- the addon requires 2 free friend slots to add the player and killer (if pvp death) info.
+	-- the maximum friend limit for a vanilla client is 50
+	-- the addon requires 2 free friend slots to add the player and killer (if pvp death) info
 	local numFriends = GetNumFriends()
 	if numFriends > 48 then
 		local requiredSlots = 50 - numFriends
@@ -72,48 +75,53 @@ end
 -- PVE = "A tragedy has occurred. Hardcore character PLAYERNAME died of natural causes at level PLAYERLEVEL. May this sacrifice not be forgotten."
 
 HCDeath:SetScript("OnEvent", function()	
-	local hcdeath
-	local pvp
+	local hcdeath	
 	local addedfriend
 	local alreadyfriend
+	local pvp
+
 	_, _, hcdeath = string.find(arg1,"A tragedy has occurred. Hardcore character (%a+)")
 	_, _, addedfriend = string.find(arg1,"(%a+) added to friends")
 	_, _, alreadyfriend = string.find(arg1,"(%a+) is already your friend")
+	_, _, removedfriend = string.find(arg1,"(%a+) removed from friends")
 
-	if (hcdeath and HCDeath.friendSlots())then			
-		-- table.insert(HCDeaths, date("!%y%m%d%H%M") .. "," .. arg1) -- log default message
-		playerName = hcdeath
+	if (hcdeath) then
+		local slots = HCDeath.friendSlots()
+		if (slots) then
+			-- table.insert(HCDeaths, date("!%y%m%d%H%M") .. "," .. arg1) -- log default message
+			playerName = hcdeath
 
-		sdate = date("!%Y/%m/%d")
-		stime = date("!%H:%M")
+			sdate = date("!%Y/%m/%d")
+			stime = date("!%H:%M")
 
-		_, _, pvp = string.find(arg1,"(PvP)")
-		_, _, environment = string.find(arg1,"(natural causes)")
+			_, _, pvp = string.find(arg1,"(PvP)")
+			_, _, environment = string.find(arg1,"(natural causes)")
 
-		if environment then
-			deathType = "PVE"
-		elseif pvp then 
-			deathType = "PVP"
-			_, _, killerName = string.find(arg1,"to%s+(%a+)%s+at")
-		else
-			deathType = "PVE"
-			_, _, killerName = string.find(arg1,"to%s+(.-)%s*%(")
-			_, _, killerLevel = string.find(arg1,"%(level%s*(.-)%).-at")			
+			if environment then
+				deathType = "PVE"
+			elseif pvp then 
+				deathType = "PVP"
+				_, _, killerName = string.find(arg1,"to%s+(%a+)%s+at")
+			else
+				deathType = "PVE"
+				_, _, killerName = string.find(arg1,"to%s+(.-)%s*%(")
+				_, _, killerLevel = string.find(arg1,"%(level%s*(.-)%).-at")			
+			end
+
+			-- disable system messages			
+			ChatFrame_RemoveMessageGroup(ChatFrame1, "SYSTEM")
+			
+			if (deathType == "PVE") then
+				AddFriend(playerName)
+			elseif (deathType == "PVP") then
+				AddFriend(playerName)
+				AddFriend(killerName)
+			end			
 		end
-		
-		if (deathType == "PVE") then
-			AddFriend(playerName)
-		elseif (deathType == "PVP") then
-			AddFriend(playerName)
-			AddFriend(killerName)
-		end
-
-		-- disable system messages
-		ChatFrame_RemoveMessageGroup(ChatFrame1, "SYSTEM")
 		return
 	end
 
-	if (not logged) then
+	if (playerName) then
 		if (addedfriend or alreadyfriend) then
 			-- get player info
 			if ((addedfriend == playerName) or (alreadyfriend == playerName)) then
@@ -150,10 +158,10 @@ HCDeath:SetScript("OnEvent", function()
 						end
 					end
 				end
-			end
+			end			
 		end
 
-		-- log death if possible
+		-- log death
 		if (deathType == "PVE") then
 			if playerClass then
 				HCDeath.logDeath()
@@ -163,11 +171,10 @@ HCDeath:SetScript("OnEvent", function()
 				HCDeath.logDeath()				
 			end
 		end
-	elseif (logged) then
+	end
+
+	if (removedfriend and logged) then
 		-- enable system messages
 		ChatFrame_AddMessageGroup(ChatFrame1, "SYSTEM")
-		local info = ChatTypeInfo["SYSTEM"]
-		DEFAULT_CHAT_FRAME:AddMessage("Hardcore Death Logged (" .. HCDeath.tablelength() .. " Deaths)", info.r, info.g, info.b, info.id)
-		logged = nil
 	end
 end)
