@@ -166,7 +166,9 @@ HCDeath:SetScript("OnEvent", function()
 		if removedfriend then
 			-- log death
 			if (deathType == "PVE") then
-				if playerClass then
+				if environment then
+					HCDeath.logDeath()					
+				elseif playerClass then
 					HCDeath.logDeath()
 				end
 			elseif (deathType == "PVP") then
