@@ -166,9 +166,7 @@ HCDeath:SetScript("OnEvent", function()
 		if removedfriend then
 			-- log death
 			if (deathType == "PVE") then
-				if environment then
-					HCDeath.logDeath()					
-				elseif playerClass then
+				if (environment or playerClass) then
 					HCDeath.logDeath()
 				end
 			elseif (deathType == "PVP") then
@@ -181,7 +179,7 @@ HCDeath:SetScript("OnEvent", function()
 		if logged then
 			-- enable system messages
 			if (deathType == "PVE") then
-				if playerClass then				
+				if (environment or playerClass) then
 					ChatFrame_AddMessageGroup(ChatFrame1, "SYSTEM")
 					HCDeath.resetVariables()
 				end
