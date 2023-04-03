@@ -52,12 +52,26 @@ function HCDeath.logDeath()
 	HCDeath.resetVariables()
 end
 
+function HCDeath.friendSlots()
+	-- the maximum friend limit for a vanilla client is 50.
+	-- the addon requires 2 free friend slots to add the player and killer (if pvp death) info.
+	local numFriends = GetNumFriends()
+	if numFriends > 48 then
+		local requiredSlots = 50 - numFriends
+		local info = ChatTypeInfo["SYSTEM"]
+		DEFAULT_CHAT_FRAME:AddMessage("Unable to log hardcore death due to friend list limit, please remove " .. requiredSlots .. " friend(s) to enable logging.", info.r, info.g, info.b, info.id)
+		return false
+	else
+		return true
+	end
+end
+
 -- Examples of Turtle WoW HC death messages:
 -- PvP = "A tragedy has occurred. Hardcore character PLAYERNAME has fallen in PvP to KILLERNAME at level PLAYERLEVEL. May this sacrifice not be forgotten."
 -- PVE = "A tragedy has occurred. Hardcore character PLAYERNAME has fallen to MOBNAME1 MOBNAME2 (level KILLERLEVEL) at level PLAYERLEVEL. May this sacrifice not be forgotten."
 -- PVE = "A tragedy has occurred. Hardcore character PLAYERNAME died of natural causes at level PLAYERLEVEL. May this sacrifice not be forgotten."
 
-HCDeath:SetScript("OnEvent", function()
+HCDeath:SetScript("OnEvent", function()	
 	local hcdeath
 	local pvp
 	local addedfriend
@@ -66,7 +80,7 @@ HCDeath:SetScript("OnEvent", function()
 	_, _, addedfriend = string.find(arg1,"(%a+) added to friends")
 	_, _, alreadyfriend = string.find(arg1,"(%a+) is already your friend")
 
-	if (hcdeath) then
+	if (hcdeath and HCDeath.friendSlots())then			
 		-- table.insert(HCDeaths, date("!%y%m%d%H%M") .. "," .. arg1) -- log default message
 		playerName = hcdeath
 
