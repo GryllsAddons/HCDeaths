@@ -73,6 +73,7 @@ HCDeath:SetScript("OnEvent", function()
 	local hcdeath	
 	local addedfriend
 	local alreadyfriend
+	local removedfriend
 	local pvp
 
 	_, _, hcdeath = string.find(arg1,"A tragedy has occurred. Hardcore character (%a+)")
