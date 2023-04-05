@@ -167,6 +167,7 @@ HCDeath:SetScript("OnEvent", function()
 			end
 		end			
 		
+		-- check for if AddFriend has failed
 		if playername then
 			-- check that player exists in friends
 			local found
