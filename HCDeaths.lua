@@ -118,11 +118,11 @@ HCDeath:SetScript("OnEvent", function()
 	if (playerName or killerName) then
 		-- if the player has been added to friends
 		if (addedfriend or alreadyfriend) then
-			-- disable system messages
-			ChatFrame_RemoveMessageGroup(ChatFrame1, "SYSTEM")
-
 			-- get player info
 			if ((addedfriend == playerName) or (alreadyfriend == playerName)) then
+				-- disable system messages
+				ChatFrame_RemoveMessageGroup(ChatFrame1, "SYSTEM")
+
 				-- if we have not looked up friend info
 				if (not playerClass) then
 					for i=0, GetNumFriends() do
@@ -141,6 +141,9 @@ HCDeath:SetScript("OnEvent", function()
 			if (deathType == "PVP") then
 				-- get killer info
 				if ((addedfriend == killerName) or (alreadyfriend == killerName)) then
+					-- disable system messages
+					ChatFrame_RemoveMessageGroup(ChatFrame1, "SYSTEM")
+					
 					-- if we have not looked up killer info
 					if (not killerClass) then
 						for i=0, GetNumFriends() do
