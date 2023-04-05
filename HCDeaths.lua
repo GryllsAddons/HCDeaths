@@ -19,8 +19,8 @@ local playerClass
 local killerName
 local killerLevel
 local killerClass
-local environment
 local logged
+
 
 function HCDeath.resetVariables()
 	sdate = nil
@@ -33,8 +33,7 @@ function HCDeath.resetVariables()
 	killerName = nil
 	killerLevel = nil
 	killerClass = nil
-	environment = nil
-	logged = nil	
+	logged = nil
 end
 
 function HCDeath.tablelength()
@@ -48,7 +47,8 @@ end
 function HCDeath.logDeath()
 	table.insert(HCDeaths, sdate .. "," .. stime .. "," .. tostring(deathType) .. "," .. tostring(zone) .. ","  .. tostring(playerName) .. "," .. tostring(playerLevel) .. "," .. tostring(playerClass) .. "," .. tostring(killerName) .. "," .. tostring(killerLevel) .. "," .. tostring(killerClass))
 	DEFAULT_CHAT_FRAME:AddMessage("|cfffc5100Hardcore Death Logged (" .. HCDeath.tablelength() .. " Deaths)|r")
-	logged = true
+	HCDeath.resetVariables()
+	logged = true	
 end
 
 function HCDeath.friendSlots()
@@ -75,6 +75,7 @@ HCDeath:SetScript("OnEvent", function()
 	local alreadyfriend
 	local removedfriend	
 	local pvp
+	local environment
 
 	_, _, hcdeath = string.find(arg1,"A tragedy has occurred. Hardcore character (%a+)")
 	_, _, addedfriend = string.find(arg1,"(%a+) added to friends")
@@ -83,7 +84,7 @@ HCDeath:SetScript("OnEvent", function()
 
 	if (hcdeath and (not playerName)) then
 		local slots = HCDeath.friendSlots()
-		if slots then
+		if (slots) then
 			-- table.insert(HCDeaths, date("!%y%m%d%H%M") .. "," .. arg1) -- log default message
 			playerName = hcdeath
 
@@ -91,149 +92,95 @@ HCDeath:SetScript("OnEvent", function()
 			stime = date("!%H:%M")
 
 			_, _, pvp = string.find(arg1,"(PvP)")
-			_, _, environment = string.find(arg1,"(natural causes)")
+			_, _, environment = string.find(arg1,"natural causes") 
 
-			if pvp then 
+			if (pvp) then 
 				deathType = "PVP"
 				_, _, killerName = string.find(arg1,"to%s+(%a+)%s+at")
 			else
 				deathType = "PVE"
-				if not environment then
+				if environment then
+					killerName = "Natural Causes"
+				else
 					_, _, killerName = string.find(arg1,"to%s+(.-)%s*%(")
 					_, _, killerLevel = string.find(arg1,"%(level%s*(.-)%).-at")
-				end
-			end
-
-			if environment then
-				killerName = "Natural Causes"
-			else
-				-- disable system messages			
-				ChatFrame_RemoveMessageGroup(ChatFrame1, "SYSTEM")
-				
-				if (deathType == "PVE") then
 					killerClass = "NPC"
-					AddFriend(playerName)
-				elseif (deathType == "PVP") then
-					AddFriend(playerName)
-					AddFriend(killerName)
 				end
 			end
 
+			-- add player and killer to friends
+			AddFriend(playerName)
+			if (deathType == "PVP") then
+				AddFriend(killerName)
+			end
 			return
-		end	
+		end		
 	end
 
 	if (playerName) then
+		-- if the player has been added to friends
 		if (addedfriend or alreadyfriend) then
+			-- disable system messages
+			ChatFrame_RemoveMessageGroup(ChatFrame1, "SYSTEM")
+
 			-- get player info
 			if ((addedfriend == playerName) or (alreadyfriend == playerName)) then
-				if (playerName and (not playerClass)) then
+				-- if we have not looked up friend info
+				if (not playerClass) then
 					for i=0, GetNumFriends() do
 						local name, level, class, area = GetFriendInfo(i)
 						if (name == playerName) then
 							playerLevel = level
 							playerClass = class
 							zone = area
-							
-							if addedfriend then
-								RemoveFriend(playerName)
-							end
-
 							break
 						end
 					end
-				end			
-			end
+					RemoveFriend(playerName)
+				end
+			end			
 			
 			if (deathType == "PVP") then
 				-- get killer info
 				if ((addedfriend == killerName) or (alreadyfriend == killerName)) then
-					if (killerName and (not killerClass)) then
+					-- if we have not looked up killer info
+					if (not killerClass) then
 						for i=0, GetNumFriends() do
 							local name, level, class = GetFriendInfo(i)
 							if (name == killerName) then
 								killerLevel = level
 								killerClass = class
-
-								if addedfriend then
-									RemoveFriend(killerName)
-								end
-
 								break
 							end
 						end
 					end
-				end
-			end
-		end			
-		
-		-- check for if AddFriend has failed
-		if playername then
-			-- check that player exists in friends
-			local found
-			for i=0, GetNumFriends() do
-				local name = GetFriendInfo(i)
-				if (name == playerName) then
-					found = true
-					break
-				end
+					RemoveFriend(killerName)
+				end				
 			end
 
-			if (not found) then
-				ChatFrame_AddMessageGroup(ChatFrame1, "SYSTEM")
-				HCDeath.resetVariables()
-				DEFAULT_CHAT_FRAME:AddMessage("|cfffc5100Unable to log hardcore death, ".. playerName .. " was not found)|r")
-				return
-			end
-		end
-
-		if (deathType == "PVP") then
-			if killerName then
-				-- check that killer exists in friends
-				local found
-				for i=0, GetNumFriends() do
-					local name = GetFriendInfo(i)
-					if (name == killerName) then
-						found = true
-						break
-					end
-				end
-
-				if (not found) then
-					ChatFrame_AddMessageGroup(ChatFrame1, "SYSTEM")
-					HCDeath.resetVariables()
-					DEFAULT_CHAT_FRAME:AddMessage("|cfffc5100Unable to log hardcore death, ".. killerName .. " was not found)|r")
-					return
-				end
-			end
-		end
-
-		if removedfriend then
-			-- log death
+			-- log death if possible
 			if (deathType == "PVE") then
-				if (environment or playerClass) then
+				if (playerClass) then
 					HCDeath.logDeath()
+					return
 				end
 			elseif (deathType == "PVP") then
 				if (playerClass and killerClass) then
-					HCDeath.logDeath()				
-				end
-			end			
-		end
-		
-		if logged then
-			-- enable system messages
-			if (deathType == "PVE") then
-				if (environment or playerClass) then
-					ChatFrame_AddMessageGroup(ChatFrame1, "SYSTEM")
-					HCDeath.resetVariables()
-				end
-			elseif (deathType == "PVP") then
-				if (playerClass and killerClass) then				
-					ChatFrame_AddMessageGroup(ChatFrame1, "SYSTEM")
-					HCDeath.resetVariables()
+					HCDeath.logDeath()
+					return
 				end
 			end
+			return
+		end
+
+		-- if the player has been removed from friends
+		if (removedfriend) then
+			-- if death has been logged
+			if (logged) then
+				-- enable system messages		
+				ChatFrame_AddMessageGroup(ChatFrame1, "SYSTEM")
+			end
+			return
 		end
 	end
 end)
