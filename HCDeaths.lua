@@ -79,7 +79,8 @@ HCDeath:SetScript("OnEvent", function()
 	_, _, alreadyfriend = string.find(arg1,"(%a+) is already your friend")
 	_, _, removedfriend = string.find(arg1,"(%a+) removed from friends")
 
-	if (hcdeath and (not playerName)) then
+	if (hcdeath) then
+		ChatFrame_AddMessageGroup(ChatFrame1, "SYSTEM")
 		local slots = HCDeath.friendSlots()
 		if (slots) then
 			-- table.insert(HCDeaths, date("!%y%m%d%H%M") .. "," .. arg1) -- log default message
@@ -109,13 +110,12 @@ HCDeath:SetScript("OnEvent", function()
 			AddFriend(playerName)
 			if (deathType == "PVP") then
 				AddFriend(killerName)
-			end			
+			end
 			return
 		end
 	end
 
-	-- if hardcore death
-	if (playerName) then
+	if (playerName or killerName) then
 		-- if the player has been added to friends
 		if (addedfriend or alreadyfriend) then
 			-- disable system messages
@@ -171,7 +171,7 @@ HCDeath:SetScript("OnEvent", function()
 			return
 		end
 
-		if (removedfriend) then
+		if (removedfriend) then			
 			-- the removed friend message will appear after the return		
 			if (deathType == "PVE") then
 				if (removedfriend == playerName) then
