@@ -34,7 +34,7 @@ function HCDeath.resetVariables()
 	killerLevel = nil
 	killerClass = nil
 	environment = nil
-	logged = nil			
+	logged = nil	
 end
 
 function HCDeath.tablelength()
@@ -73,7 +73,7 @@ HCDeath:SetScript("OnEvent", function()
 	local hcdeath	
 	local addedfriend
 	local alreadyfriend
-	local removedfriend
+	local removedfriend	
 	local pvp
 
 	_, _, hcdeath = string.find(arg1,"A tragedy has occurred. Hardcore character (%a+)")
@@ -138,6 +138,8 @@ HCDeath:SetScript("OnEvent", function()
 							if addedfriend then
 								RemoveFriend(playerName)
 							end
+
+							break
 						end
 					end
 				end			
@@ -156,9 +158,51 @@ HCDeath:SetScript("OnEvent", function()
 								if addedfriend then
 									RemoveFriend(killerName)
 								end
+
+								break
 							end
 						end
 					end
+				end
+			end
+		end			
+		
+		if playername then
+			-- check that player exists in friends
+			local found
+			for i=0, GetNumFriends() do
+				local name = GetFriendInfo(i)
+				if (name == playerName) then
+					found = true
+					break
+				end
+			end
+
+			if (not found) then
+				ChatFrame_AddMessageGroup(ChatFrame1, "SYSTEM")
+				HCDeath.resetVariables()
+				DEFAULT_CHAT_FRAME:AddMessage("|cfffc5100Unable to log hardcore death, ".. playerName .. " was not found)|r")
+				return
+			end
+		end
+
+		if (deathType == "PVP") then
+			if killerName then
+				-- check that killer exists in friends
+				local found
+				for i=0, GetNumFriends() do
+					local name = GetFriendInfo(i)
+					if (name == killerName) then
+						found = true
+						break
+					end
+				end
+
+				if (not found) then
+					ChatFrame_AddMessageGroup(ChatFrame1, "SYSTEM")
+					HCDeath.resetVariables()
+					DEFAULT_CHAT_FRAME:AddMessage("|cfffc5100Unable to log hardcore death, ".. killerName .. " was not found)|r")
+					return
 				end
 			end
 		end
