@@ -32,8 +32,7 @@ function HCDeath.resetVariables()
 	playerClass = nil
 	killerName = nil
 	killerLevel = nil
-	killerClass = nil
-	logged = nil
+	killerClass = nil	
 end
 
 function HCDeath.tablelength()
@@ -48,7 +47,7 @@ function HCDeath.logDeath()
 	table.insert(HCDeaths, sdate .. "," .. stime .. "," .. tostring(deathType) .. "," .. tostring(zone) .. ","  .. tostring(playerName) .. "," .. tostring(playerLevel) .. "," .. tostring(playerClass) .. "," .. tostring(killerName) .. "," .. tostring(killerLevel) .. "," .. tostring(killerClass))
 	DEFAULT_CHAT_FRAME:AddMessage("|cfffc5100Hardcore Death Logged (" .. HCDeath.tablelength() .. " Deaths)|r")
 	HCDeath.resetVariables()
-	logged = true	
+	logged = true
 end
 
 function HCDeath.friendSlots()
@@ -179,6 +178,7 @@ HCDeath:SetScript("OnEvent", function()
 			if (logged) then
 				-- enable system messages		
 				ChatFrame_AddMessageGroup(ChatFrame1, "SYSTEM")
+				logged = nil
 			end
 			return
 		end
