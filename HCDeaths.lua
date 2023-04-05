@@ -120,7 +120,8 @@ HCDeath:SetScript("OnEvent", function()
 		-- if the player has been added to friends
 		if (addedfriend or alreadyfriend) then
 			-- disable system messages
-			ChatFrame_RemoveMessageGroup(ChatFrame1, "SYSTEM")
+			-- ChatFrame_RemoveMessageGroup(ChatFrame1, "SYSTEM")
+			ChatFrame1:UnregisterEvent("CHAT_MSG_SYSTEM")
 
 			-- get player info
 			if ((addedfriend == playerName) or (alreadyfriend == playerName)) then
@@ -176,8 +177,9 @@ HCDeath:SetScript("OnEvent", function()
 		if (removedfriend) then
 			-- if death has been logged
 			if (logged) then
-				-- enable system messages		
-				ChatFrame_AddMessageGroup(ChatFrame1, "SYSTEM")
+				-- enable system messages				
+				-- ChatFrame_AddMessageGroup(ChatFrame1, "SYSTEM")
+				ChatFrame1:RegisterEvent("CHAT_MSG_SYSTEM")
 				logged = nil
 			end
 			return
