@@ -11,16 +11,16 @@ Example of HCDeaths.lua from the SavedVariables folder:
 
 ```
 HCDeaths = {
-	[1] = "2023/04/02,22:18,PVE,Redridge Mountains,Calessara,19,Mage,Blackrock Outrunner,21,NPC",
-	[2] = "2023/04/02,22:19,PVE,Redridge Mountains,Tassu,19,Rogue,Blackrock Outrunner,21,NPC",
-	[3] = "2023/04/02,22:21,PVE,Teldrassil,Okimi,12,Mage,Oakenscowl,9,NPC",
-	[4] = "2023/04/02,22:21,PVP,Westfall,Checoelevent,20,Mage,Chicagobulls,19,Hunter",
-	[5] = "2023/04/02,22:28,PVE,Dun Morogh,Tommy,11,Paladin,Rockjaw Bonesnapper,9,NPC",
-	[6] = "2023/04/02,22:28,PVE,Durotar,Jalda,10,Shaman,Fizzle Darkstorm,12,NPC",
-	[7] = "2023/04/02,22:33,PVE,Loch Modan,Grimlly,13,Hunter,Black Bear Patriarch,17,NPC",
-	[8] = "2023/04/02,22:38,PVE,Elwynn Forest,Hadzy,10,Hunter,Longsnout,11,NPC",
-	[9] = "2023/04/02,22:40,PVP,Mulgore,Earthspec,12,Shaman,Lodr,10,Hunter",
-	[10] = "2023/04/02,22:43,PVE,Teldrassil,Turbowarrior,13,Warrior,Gnarlpine Pathfinder,9,NPC",
+	[1] = "2023/04/08,17:24:11,PVE,The Barrens,Binkybae,18,Mage,Razormane Geomancer,13,NPC",
+	[2] = "2023/04/08,17:24:37,PVE,Dun Morogh,Pinkdog,10,Priest,Winter Wolf,8,NPC",
+	[3] = "2023/04/08,17:27:00,PVE,Westfall,Svonma,14,Hunter,Defias Smuggler,11,NPC",
+	[4] = "2023/04/08,17:31:42,PVE,Loch Modan,Paulissa,14,Hunter,Stonesplinter Bonesnapper,16,NPC",
+	[5] = "2023/04/08,17:32:27,PVE,Silverpine Forest,Rivas,20,Hunter,Pyrewood Tailor,14,NPC",
+	[6] = "2023/04/08,17:32:55,PVE,Thousand Needles,Omegalock,33,Warlock,Galak Mauler,28,NPC",
+	[7] = "2023/04/08,17:32:56,PVE,Westfall,Stavropol,20,Warlock,Carver Molsen,21,NPC",
+	[8] = "2023/04/08,17:40:38,PVE,Durotar,Dosar,14,Warrior,Sand Shark,12,NPC",
+	[9] = "2023/04/08,17:44:42,PVE,Dun Morogh,Scalefisher,10,Warrior,Rockjaw Bonesnapper,10,NPC",
+	[10] = "2023/04/08,17:45:42,PVE,Stonetalon Mountains,Nakhunkorn,20,Hunter,Young Pridewing,19,NPC",
 }
 ```
 
