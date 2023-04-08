@@ -81,13 +81,12 @@ HCDeath:SetScript("OnEvent", function()
 
 	if (hcdeath) then
 		ChatFrame_AddMessageGroup(ChatFrame1, "SYSTEM")
-		local slots = HCDeath.friendSlots()
-		if (slots) then
+		if (HCDeath.friendSlots()) then
 			-- table.insert(HCDeaths, date("!%y%m%d%H%M") .. "," .. arg1) -- log default message
 			playerName = hcdeath
 
 			sdate = date("!%Y/%m/%d")
-			stime = date("!%H:%M")
+			stime = date("!%H:%M:%S")
 
 			_, _, pvp = string.find(arg1,"(PvP)")
 			_, _, environment = string.find(arg1,"natural causes") 
@@ -111,7 +110,6 @@ HCDeath:SetScript("OnEvent", function()
 			if (deathType == "PVP") then
 				AddFriend(killerName)
 			end
-			return
 		end
 	end
 
@@ -133,8 +131,7 @@ HCDeath:SetScript("OnEvent", function()
 							zone = area
 							break
 						end
-					end
-					RemoveFriend(playerName)
+					end					
 				end
 			end
 			
@@ -155,8 +152,12 @@ HCDeath:SetScript("OnEvent", function()
 							end
 						end
 					end
-					RemoveFriend(killerName)
 				end
+			end
+
+			-- remove friend if not already a friend
+			if (not alreadyfriend) then
+				RemoveFriend(playerName)
 			end
 
 			-- log death if possible
@@ -174,16 +175,15 @@ HCDeath:SetScript("OnEvent", function()
 			return
 		end
 
-		if (removedfriend) then			
-			-- the removed friend message will appear after the return		
+		if (removedfriend or alreadyfriend) then	
 			if (deathType == "PVE") then
-				if (removedfriend == playerName) then
+				if (removedfriend == playerName) or (alreadyfriend == playerName) then
 					HCDeath.resetVariables()
 					enableMessages = true
 					return
 				end
 			elseif (deathType == "PVP") then
-				if (removedfriend == killerName) then					
+				if (removedfriend == killerName) or (alreadyfriend == killerName) then					
 					HCDeath.resetVariables()
 					enableMessages = true
 					return
@@ -192,7 +192,6 @@ HCDeath:SetScript("OnEvent", function()
 		end
 	end
 
-	-- catches the removed friend message
 	if (enableMessages) then
 		-- enable system messages
 		ChatFrame_AddMessageGroup(ChatFrame1, "SYSTEM")
