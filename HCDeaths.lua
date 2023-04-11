@@ -11,6 +11,7 @@ HCDeaths = {}
 
 local sdate
 local stime
+local environment
 local deathType
 local zone
 local playerName
@@ -25,6 +26,7 @@ local enableMessages
 function HCDeath.resetVariables()
 	sdate = nil
 	stime = nil
+	environment = nil
 	deathType = nil
 	zone = nil
 	playerName = nil
@@ -72,7 +74,6 @@ HCDeath:SetScript("OnEvent", function()
 	local alreadyfriend
 	local removedfriend	
 	local pvp
-	local environment
 
 	_, _, hcdeath = string.find(arg1,"A tragedy has occurred. Hardcore character (%a+)")
 	_, _, addedfriend = string.find(arg1,"(%a+) added to friends")
@@ -98,6 +99,7 @@ HCDeath:SetScript("OnEvent", function()
 				deathType = "PVE"
 				if environment then
 					killerName = "Natural Causes"
+					killerClass = "Environment"
 				else
 					_, _, killerName = string.find(arg1,"to%s+(.-)%s*%(")
 					_, _, killerLevel = string.find(arg1,"%(level%s*(.-)%).-at")
@@ -135,7 +137,7 @@ HCDeath:SetScript("OnEvent", function()
 				end
 			end
 			
-			if (deathType == "PVP") then
+			if ((deathType == "PVP") and (not environment)) then
 				-- get killer info
 				if ((addedfriend == killerName) or (alreadyfriend == killerName)) then
 					-- disable system messages
@@ -154,10 +156,15 @@ HCDeath:SetScript("OnEvent", function()
 					end
 				end
 			end
-
+			
 			-- remove friend if not already a friend
 			if (not alreadyfriend) then
-				RemoveFriend(playerName)
+				if (addedfriend == playerName) then
+					RemoveFriend(playerName)
+				end
+				if (addedfriend == killerName) then
+					RemoveFriend(killerName)
+				end				
 			end
 
 			-- log death if possible
