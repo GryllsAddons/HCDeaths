@@ -16,6 +16,3 @@ HCDeaths = {
 	[3] = "2023/03/31,17:25:35,PVE,Elwynn Forest,Tents,10,Rogue,Natural Causes,nil,ENV",
 }
 ```
-
-## Credit
-Code from [HardcoreDeath](https://github.com/Lexiebean/HardcoreDeath/) by [Lexiebean](https://github.com/Lexiebean/)
