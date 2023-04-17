@@ -119,7 +119,7 @@ function HCDeath:remove(removedfriend)
 				break
 			end
 		elseif (hcdeath.deathType == "PVP") then
-			if (removedfriend == hcdeath.killerName) or (not hcdeath.addedKiller) or (not hcdeath.addedPlayer) then
+			if (removedfriend == hcdeath.killerName) or ((not hcdeath.addedKiller) and (not hcdeath.addedPlayer)) then
 				HCDeath:reset(i)
 				break
 			end
