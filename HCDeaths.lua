@@ -139,7 +139,6 @@ function ChatFrame_OnEvent(event)
 		-- PVE = "A tragedy has occurred. Hardcore character PLAYERNAME has fallen to MOBNAME1 MOBNAME2 (level KILLERLEVEL) at level PLAYERLEVEL. May this sacrifice not be forgotten."
 		-- PVE = "A tragedy has occurred. Hardcore character PLAYERNAME died of natural causes at level PLAYERLEVEL. May this sacrifice not be forgotten."
 
-		local hcdeath, addedfriend, removedfriend
 		_, _, hcdeath = string.find(arg1,"A tragedy has occurred. Hardcore character (%a+)")
 		_, _, addedfriend = string.find(arg1,"(%a+) added to friends")
 		_, _, removedfriend = string.find(arg1,"(%a+) removed from friends")	
