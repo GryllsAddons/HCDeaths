@@ -2,7 +2,6 @@
 -- date,time,deathType,zone,playerName,playerLevel,playerClass,killerName,killerLevel,killerClass
 
 local HCDeath = CreateFrame("Frame", nil, UIParent)
-HCDeath:RegisterEvent("CHAT_MSG_SYSTEM")
 
 HCDeaths = {}
 local deaths = {}
@@ -111,6 +110,11 @@ function HCDeath:logDeath(player)
 	end
 end
 
+function HCDeath:reset(i)
+	table.remove(deaths, i)
+	logged = nil
+end
+
 function HCDeath:remove(removedfriend)
 	for i, hcdeath in ipairs(deaths) do
 		if (hcdeath.deathType == "PVE") then
@@ -127,82 +131,74 @@ function HCDeath:remove(removedfriend)
 	end
 end
 
-function HCDeath:reset(i)
-	table.remove(deaths, i)
-	logged = nil
-	HCDeath:enableMessages()
-end
+local HookChatFrame_OnEvent = ChatFrame_OnEvent
+function ChatFrame_OnEvent(event)	
+	if (event == "CHAT_MSG_SYSTEM") then
+		-- Examples of Turtle WoW HC death messages:
+		-- PvP = "A tragedy has occurred. Hardcore character PLAYERNAME has fallen in PvP to KILLERNAME at level PLAYERLEVEL. May this sacrifice not be forgotten."
+		-- PVE = "A tragedy has occurred. Hardcore character PLAYERNAME has fallen to MOBNAME1 MOBNAME2 (level KILLERLEVEL) at level PLAYERLEVEL. May this sacrifice not be forgotten."
+		-- PVE = "A tragedy has occurred. Hardcore character PLAYERNAME died of natural causes at level PLAYERLEVEL. May this sacrifice not be forgotten."
 
-function HCDeath:enableMessages()
-	ChatFrame1:RegisterEvent("CHAT_MSG_SYSTEM")
-end
+		local hcdeath, addedfriend, removedfriend
+		_, _, hcdeath = string.find(arg1,"A tragedy has occurred. Hardcore character (%a+)")
+		_, _, addedfriend = string.find(arg1,"(%a+) added to friends")
+		_, _, removedfriend = string.find(arg1,"(%a+) removed from friends")	
+		
+		if hcdeath then
+			local info = ChatTypeInfo["SYSTEM"]
+			DEFAULT_CHAT_FRAME:AddMessage(arg1, info.r, info.g, info.b, info.id)
 
-function HCDeath:disableMessages()
-	ChatFrame1:UnregisterEvent("CHAT_MSG_SYSTEM")
-end
+			if HCDeath:friendSlots() then
+				-- table.insert(HCDeaths, date("!%y%m%d%H%M")..","..arg1) -- log default message
 
-HCDeath:SetScript("OnEvent", function()	
-	-- Examples of Turtle WoW HC death messages:
-	-- PvP = "A tragedy has occurred. Hardcore character PLAYERNAME has fallen in PvP to KILLERNAME at level PLAYERLEVEL. May this sacrifice not be forgotten."
-	-- PVE = "A tragedy has occurred. Hardcore character PLAYERNAME has fallen to MOBNAME1 MOBNAME2 (level KILLERLEVEL) at level PLAYERLEVEL. May this sacrifice not be forgotten."
-	-- PVE = "A tragedy has occurred. Hardcore character PLAYERNAME died of natural causes at level PLAYERLEVEL. May this sacrifice not be forgotten."
+				local pvp, natural, dType, kName, kLevel, kClass
+				_, _, pvp = string.find(arg1,"(PvP)")
+				_, _, natural = string.find(arg1,"(natural causes)")			
 
-	local hcdeath, addedfriend, removedfriend
-	_, _, hcdeath = string.find(arg1,"A tragedy has occurred. Hardcore character (%a+)")
-	_, _, addedfriend = string.find(arg1,"(%a+) added to friends")
-	_, _, removedfriend = string.find(arg1,"(%a+) removed from friends")	
-	
-	if hcdeath then
-		if HCDeath:friendSlots() then
-			-- table.insert(HCDeaths, date("!%y%m%d%H%M")..","..arg1) -- log default message
-
-			local pvp, natural, dType, kName, kLevel, kClass
-			_, _, pvp = string.find(arg1,"(PvP)")
-			_, _, natural = string.find(arg1,"(natural causes)")			
-
-			if pvp then 
-				dType = "PVP"
-				_, _, kName = string.find(arg1,"to%s+(%a+)%s+at")
-			else
-				dType = "PVE"
-				if natural then
-					kName = "Natural Causes"
-					kClass = "ENV"
+				if pvp then 
+					dType = "PVP"
+					_, _, kName = string.find(arg1,"to%s+(%a+)%s+at")
 				else
-					_, _, kName = string.find(arg1,"to%s+(.-)%s*%(")
-					_, _, kLevel = string.find(arg1,"%(level%s*(.-)%).-at")
-					kClass = "NPC"
+					dType = "PVE"
+					if natural then
+						kName = "Natural Causes"
+						kClass = "ENV"
+					else
+						_, _, kName = string.find(arg1,"to%s+(.-)%s*%(")
+						_, _, kLevel = string.find(arg1,"%(level%s*(.-)%).-at")
+						kClass = "NPC"
+					end
 				end
+
+				table.insert(deaths, {
+					sdate = date("!%Y/%m/%d"),
+					stime = date("!%H:%M:%S"),
+					deathType = dType,
+					zone = nil,
+					playerName = hcdeath,
+					playerLevel = nil,
+					playerClass = nil,
+					killerName = kName,
+					killerLevel = kLevel,
+					killerClass = kClass,
+					addedPlayer = nil,
+					addedKiller = nil,
+					info = nil
+				})
+
+				HCDeath:AddFriends()					
+				return
 			end
-
-			table.insert(deaths, {
-				sdate = date("!%Y/%m/%d"),
-				stime = date("!%H:%M:%S"),
-				deathType = dType,
-				zone = nil,
-				playerName = hcdeath,
-				playerLevel = nil,
-				playerClass = nil,
-				killerName = kName,
-				killerLevel = kLevel,
-				killerClass = kClass,
-				addedPlayer = nil,
-				addedKiller = nil,
-				info = nil
-			})
-
-			HCDeath:disableMessages()
-			HCDeath:AddFriends()
+		elseif addedfriend and (not logged) then
+			HCDeath:logDeath(addedfriend)
+			return
+		elseif removedfriend and logged then
+			HCDeath:remove(removedfriend)
 			return
 		end
-	elseif addedfriend and (not logged) then
-		HCDeath:logDeath(addedfriend)
-		return
-	elseif removedfriend and logged then
-		HCDeath:remove(removedfriend)
-		return
 	end
-end)
 
-HCDeath:enableMessages()
+	HookChatFrame_OnEvent(event)
+end
+
 DEFAULT_CHAT_FRAME:AddMessage("|cfffc5100HCDeaths Loaded!|r")
