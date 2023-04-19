@@ -1,8 +1,7 @@
 -- This addon will save Turtle WoW hardcore deaths to "\WTF\Account\ACCOUNTNAME\SavedVariables\HCDeaths.lua" in the following format:
--- date,time,deathType,zone,playerName,playerLevel,playerClass,killerName,killerLevel,killerClass
+-- date,time,deathType,zone,playerName,playerLevel,playerClass,playerRace,playerGuild,killerName,killerLevel,killerClass,killerRace,killerGuild
 
 local HCDeath = CreateFrame("Frame", nil, UIParent)
-
 HCDeaths = {}
 local deaths = {}
 local logged
@@ -15,118 +14,62 @@ function HCDeath:tableLength()
 	return count	
 end
 
-function HCDeath:showDeaths()
-	for _, hcdeath in pairs(deaths) do
-		DEFAULT_CHAT_FRAME:AddMessage(hcdeath.playerName)
-	end
-end
-
-function HCDeath:friendSlots()
-	-- the maximum friend limit for a vanilla client is 50
-	-- the addon requires 2 free friend slots to add the player and killer (if pvp death) info
-	local numFriends = GetNumFriends()
-	if (numFriends > 48) then
-		local requiredSlots = 50 - numFriends
-		DEFAULT_CHAT_FRAME:AddMessage("|cfffc5100Unable to log hardcore death due to friend list limit, please remove "..requiredSlots.." friend(s) to enable logging.|r")
-		return false
-	else
-		return true
-	end
-end
-
-function HCDeath:isFriend(player)
-	for i=0, GetNumFriends() do
-		local name = GetFriendInfo(i)
-		if (name == player) then
-			return true
-		end
-	end
-end
-
-function HCDeath:friendInfo(player)
-	for i=0, GetNumFriends() do
-		local name, level, class, area = GetFriendInfo(i)
-		if (name == player) then
-			return level, class, area
-		end
-	end
-end
-
-function HCDeath:AddFriends()	
-	for _, hcdeath in pairs(deaths) do
-		if HCDeath:isFriend(hcdeath.playerName) then
-			HCDeath:logDeath(hcdeath.playerName)
-		else
-			hcdeath.addedPlayer = true
-			AddFriend(hcdeath.playerName)
-		end
-
-		if (hcdeath.deathType == "PVP") then
-			if HCDeath:isFriend(hcdeath.killerName) then
-				HCDeath:logDeath(hcdeath.killerName)
-			else
-				hcdeath.addedKiller = true
-				AddFriend(hcdeath.killerName)
-			end
-		end
-	end
-end
-
-function HCDeath:logDeath(player)
-	for _, hcdeath in pairs(deaths) do
-		if (player == hcdeath.playerName) then
-			hcdeath.playerLevel, hcdeath.playerClass, hcdeath.zone = HCDeath:friendInfo(hcdeath.playerName)				
-		elseif (player == hcdeath.killerName) then
-			hcdeath.killerLevel, hcdeath.killerClass = HCDeath:friendInfo(hcdeath.killerName)			
-		end
-
-		if (hcdeath.deathType == "PVE") then
-			if (not hcdeath.info) and hcdeath.playerLevel and hcdeath.playerClass and hcdeath.zone then
-				hcdeath.info = true
-			end
-		elseif (hcdeath.deathType == "PVP") then
-			if (not hcdeath.info) and hcdeath.playerLevel and hcdeath.playerClass and hcdeath.zone and hcdeath.killerLevel and hcdeath.killerClass then
-				hcdeath.info = true
-			end
-		end
-
-		if hcdeath.info then
-			table.insert(HCDeaths, hcdeath.sdate..","..hcdeath.stime..","..hcdeath.deathType..","..hcdeath.zone..","..hcdeath.playerName..","..hcdeath.playerLevel..","..hcdeath.playerClass..","..hcdeath.killerName..","..tostring(hcdeath.killerLevel)..","..hcdeath.killerClass)
-			DEFAULT_CHAT_FRAME:AddMessage("|cfffc5100Hardcore "..hcdeath.deathType.." Death Logged ("..HCDeath:tableLength().." Deaths)|r")
-			logged = true
-
-			if hcdeath.addedPlayer then
-				RemoveFriend(hcdeath.playerName)
-			end
-
-			if hcdeath.addedKiller then
-				RemoveFriend(hcdeath.killerName)
-			end
-		end
-	end
-
-	if logged then
-		HCDeath:remove()
-	end
-end
-
-function HCDeath:reset(i)
-	table.remove(deaths, i)
-	logged = nil
-end
-
-function HCDeath:remove(removedfriend)
+function HCDeath:RemoveDeath()
 	for i, hcdeath in ipairs(deaths) do
-		if (hcdeath.deathType == "PVE") then
-			if (removedfriend == hcdeath.playerName) or (not hcdeath.addedPlayer) then
-				HCDeath:reset(i)
-				break
+		if hcdeath.info then
+			table.remove(deaths, i)
+		end
+	end
+end
+
+function HCDeath:SendWho()
+	for _, hcdeath in pairs(deaths) do
+		if not hcdeath.playerGuild then	
+			SendWho(hcdeath.playerName)
+			return
+		end
+
+		if not hcdeath.killerGuild and hcdeath.deathType == "PVP" then
+			SendWho(hcdeath.killerName)
+			return
+		end
+	end
+end
+
+function HCDeath:GetWhoInfo(player)
+    local numWhos = GetNumWhoResults()
+	for i=0, numWhos do
+        local name, guild, level, race, class, zone = GetWhoInfo(i)
+		if (name == player) then
+			return guild, level, race, class, zone
+		end
+	end
+end
+
+function HCDeath:QueryPlayer()
+	for _, hcdeath in pairs(deaths) do
+		if not hcdeath.playerGuild then
+			hcdeath.playerGuild, hcdeath.playerLevel, hcdeath.playerRace, hcdeath.playerClass, hcdeath.zone = HCDeath:GetWhoInfo(hcdeath.playerName)
+			if hcdeath.deathType == "PVE" and hcdeath.playerGuild then
+				hcdeath.info = true
+			else
+				HCDeath:SendWho()
+				return
 			end
-		elseif (hcdeath.deathType == "PVP") then
-			if (removedfriend == hcdeath.killerName) or ((not hcdeath.addedKiller) and (not hcdeath.addedPlayer)) then
-				HCDeath:reset(i)
-				break
+		end
+
+		if not hcdeath.killerGuild and hcdeath.deathType == "PVP" then
+			hcdeath.killerGuild, hcdeath.killerLevel, hcdeath.killerRace, hcdeath.killerClass = HCDeath:GetWhoInfo(hcdeath.killerName)
+			if hcdeath.killerGuild then
+				hcdeath.info = true
 			end
+		end
+
+		if hcdeath.info and (not logged) then
+			table.insert(HCDeaths, hcdeath.sdate..","..hcdeath.stime..","..hcdeath.deathType..","..hcdeath.zone..","..hcdeath.playerName..","..hcdeath.playerLevel..","..hcdeath.playerClass..","..hcdeath.playerRace..","..hcdeath.playerGuild..","..hcdeath.killerName..","..tostring(hcdeath.killerLevel)..","..hcdeath.killerClass..","..tostring(hcdeath.killerRace)..","..tostring(hcdeath.killerGuild))
+			logged = true
+			HCDeath:RemoveDeath()
+			DEFAULT_CHAT_FRAME:AddMessage("Hardcore "..hcdeath.deathType.." Death Logged ("..HCDeath:tableLength().." Deaths)", 1, 0.5, 0)
 		end
 	end
 end
@@ -139,65 +82,66 @@ function ChatFrame_OnEvent(event)
 		-- PVE = "A tragedy has occurred. Hardcore character PLAYERNAME has fallen to MOBNAME1 MOBNAME2 (level KILLERLEVEL) at level PLAYERLEVEL. May this sacrifice not be forgotten."
 		-- PVE = "A tragedy has occurred. Hardcore character PLAYERNAME died of natural causes at level PLAYERLEVEL. May this sacrifice not be forgotten."
 
+		-- Example of /who result messages:
+		-- 1 player total
+		-- 3 players total
+
 		_, _, hcdeath = string.find(arg1,"A tragedy has occurred. Hardcore character (%a+)")
-		_, _, addedfriend = string.find(arg1,"(%a+) added to friends")
-		_, _, removedfriend = string.find(arg1,"(%a+) removed from friends")	
+		_, _, result = string.find(arg1,"player%s?total")	
 		
-		if hcdeath then
+		if hcdeath then			
+			logged = nil
+			-- table.insert(HCDeaths, date("!%y%m%d%H%M")..","..arg1) -- log default message
 			local info = ChatTypeInfo["SYSTEM"]
-			DEFAULT_CHAT_FRAME:AddMessage(arg1, info.r, info.g, info.b, info.id)
+			DEFAULT_CHAT_FRAME:AddMessage(arg1, info.r, info.g, info.b, info.id)			
 
-			if HCDeath:friendSlots() then
-				-- table.insert(HCDeaths, date("!%y%m%d%H%M")..","..arg1) -- log default message
+			local pvp, natural, deathType, killerName, killerLevel, killerClass
+			_, _, pvp = string.find(arg1,"(PvP)")
+			_, _, natural = string.find(arg1,"(natural causes)")			
 
-				local pvp, natural, dType, kName, kLevel, kClass
-				_, _, pvp = string.find(arg1,"(PvP)")
-				_, _, natural = string.find(arg1,"(natural causes)")			
-
-				if pvp then 
-					dType = "PVP"
-					_, _, kName = string.find(arg1,"to%s+(%a+)%s+at")
+			if pvp then 
+				deathType = "PVP"
+				_, _, killerName = string.find(arg1,"to%s+(%a+)%s+at")
+			else
+				deathType = "PVE"
+				if natural then
+					killerName = "Natural Causes"
+					killerClass = "ENV"
 				else
-					dType = "PVE"
-					if natural then
-						kName = "Natural Causes"
-						kClass = "ENV"
-					else
-						_, _, kName = string.find(arg1,"to%s+(.-)%s*%(")
-						_, _, kLevel = string.find(arg1,"%(level%s*(.-)%).-at")
-						kClass = "NPC"
-					end
+					_, _, killerName = string.find(arg1,"to%s+(.-)%s*%(")
+					_, _, killerLevel = string.find(arg1,"%(level%s*(.-)%).-at")
+					killerClass = "NPC"
 				end
-
-				table.insert(deaths, {
-					sdate = date("!%Y/%m/%d"),
-					stime = date("!%H:%M:%S"),
-					deathType = dType,
-					zone = nil,
-					playerName = hcdeath,
-					playerLevel = nil,
-					playerClass = nil,
-					killerName = kName,
-					killerLevel = kLevel,
-					killerClass = kClass,
-					addedPlayer = nil,
-					addedKiller = nil,
-					info = nil
-				})
-
-				HCDeath:AddFriends()					
-				return
 			end
-		elseif addedfriend and (not logged) then
-			HCDeath:logDeath(addedfriend)
+
+			table.insert(deaths, {
+				sdate = date("!%Y/%m/%d"),
+				stime = date("!%H:%M:%S"),
+				deathType = deathType,
+				zone = nil,
+				playerName = hcdeath,
+				playerLevel = nil,
+				playerClass = nil,
+				playerRace = nil,
+				playerGuild = nil,
+				killerName = killerName,
+				killerLevel = killerLevel,
+				killerClass = killerClass,
+				killerRace = nil,
+				killerGuild = nil,
+				info = nil
+			})
+
+			HCDeath:SendWho()
 			return
-		elseif removedfriend and logged then
-			HCDeath:remove(removedfriend)
+		elseif not result then
+			if not logged then			
+				HCDeath:QueryPlayer()
+			end
 			return
 		end
 	end
-
 	HookChatFrame_OnEvent(event)
 end
 
-DEFAULT_CHAT_FRAME:AddMessage("|cfffc5100HCDeaths Loaded!|r")
+DEFAULT_CHAT_FRAME:AddMessage("HCDeaths Loaded!", 1, 0.5, 0)
