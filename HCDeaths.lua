@@ -53,7 +53,7 @@ function HCDeath:QueryPlayer()
 
 		if hcdeath.info then
 			logged = true
-			table.insert(HCDeaths, hcdeath.sdate..","..hcdeath.stime..","..hcdeath.deathType..","..hcdeath.zone..","..hcdeath.playerName..","..hcdeath.playerLevel..","..hcdeath.playerClass..","..hcdeath.playerRace..","..hcdeath.playerGuild..","..hcdeath.killerName..","..tostring(hcdeath.killerLevel)..","..hcdeath.killerClass..","..tostring(hcdeath.killerRace)..","..tostring(hcdeath.killerGuild))
+			table.insert(HCDeaths, hcdeath.sdate..","..hcdeath.stime..","..hcdeath.deathType..","..hcdeath.zone..","..hcdeath.playerName..","..hcdeath.playerLevel..","..hcdeath.playerClass..","..hcdeath.playerRace..","..tostring(hcdeath.playerGuild)..","..hcdeath.killerName..","..tostring(hcdeath.killerLevel)..","..hcdeath.killerClass..","..tostring(hcdeath.killerRace)..","..tostring(hcdeath.killerGuild))
 			HCDeath:RemoveDeath()
 			DEFAULT_CHAT_FRAME:AddMessage("Hardcore "..hcdeath.deathType.." Death Logged ("..HCDeath:tableLength().." Deaths)", 1, 0.3, 0)
 		end
