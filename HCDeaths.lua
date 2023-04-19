@@ -22,20 +22,6 @@ function HCDeath:RemoveDeath()
 	end
 end
 
-function HCDeath:SendWho()
-	for _, hcdeath in pairs(deaths) do
-		if not hcdeath.playerGuild then	
-			SendWho(hcdeath.playerName)
-			return
-		end
-
-		if not hcdeath.killerGuild and hcdeath.deathType == "PVP" then
-			SendWho(hcdeath.killerName)
-			return
-		end
-	end
-end
-
 function HCDeath:GetWhoInfo(player)
     local numWhos = GetNumWhoResults()
 	for i=0, numWhos do
@@ -53,23 +39,23 @@ function HCDeath:QueryPlayer()
 			if hcdeath.deathType == "PVE" and hcdeath.playerGuild then
 				hcdeath.info = true
 			else
-				HCDeath:SendWho()
+				SendWho(hcdeath.killerName)
 				return
 			end
 		end
 
-		if not hcdeath.killerGuild and hcdeath.deathType == "PVP" then
+		if (not hcdeath.killerGuild) and hcdeath.deathType == "PVP" then
 			hcdeath.killerGuild, hcdeath.killerLevel, hcdeath.killerRace, hcdeath.killerClass = HCDeath:GetWhoInfo(hcdeath.killerName)
 			if hcdeath.killerGuild then
 				hcdeath.info = true
 			end
 		end
 
-		if hcdeath.info and (not logged) then
-			table.insert(HCDeaths, hcdeath.sdate..","..hcdeath.stime..","..hcdeath.deathType..","..hcdeath.zone..","..hcdeath.playerName..","..hcdeath.playerLevel..","..hcdeath.playerClass..","..hcdeath.playerRace..","..hcdeath.playerGuild..","..hcdeath.killerName..","..tostring(hcdeath.killerLevel)..","..hcdeath.killerClass..","..tostring(hcdeath.killerRace)..","..tostring(hcdeath.killerGuild))
+		if hcdeath.info then
 			logged = true
+			table.insert(HCDeaths, hcdeath.sdate..","..hcdeath.stime..","..hcdeath.deathType..","..hcdeath.zone..","..hcdeath.playerName..","..hcdeath.playerLevel..","..hcdeath.playerClass..","..hcdeath.playerRace..","..hcdeath.playerGuild..","..hcdeath.killerName..","..tostring(hcdeath.killerLevel)..","..hcdeath.killerClass..","..tostring(hcdeath.killerRace)..","..tostring(hcdeath.killerGuild))
 			HCDeath:RemoveDeath()
-			DEFAULT_CHAT_FRAME:AddMessage("Hardcore "..hcdeath.deathType.." Death Logged ("..HCDeath:tableLength().." Deaths)", 1, 0.5, 0)
+			DEFAULT_CHAT_FRAME:AddMessage("Hardcore "..hcdeath.deathType.." Death Logged ("..HCDeath:tableLength().." Deaths)", 1, 0.3, 0)
 		end
 	end
 end
@@ -87,10 +73,9 @@ function ChatFrame_OnEvent(event)
 		-- 3 players total
 
 		_, _, hcdeath = string.find(arg1,"A tragedy has occurred. Hardcore character (%a+)")
-		_, _, result = string.find(arg1,"player%s?total")	
-		
-		if hcdeath then			
-			logged = nil
+		_, _, result = string.find(arg1,"(player%s?total)")
+
+		if hcdeath then
 			-- table.insert(HCDeaths, date("!%y%m%d%H%M")..","..arg1) -- log default message
 			local info = ChatTypeInfo["SYSTEM"]
 			DEFAULT_CHAT_FRAME:AddMessage(arg1, info.r, info.g, info.b, info.id)			
@@ -132,16 +117,19 @@ function ChatFrame_OnEvent(event)
 				info = nil
 			})
 
-			HCDeath:SendWho()
+			SendWho(hcdeath)
 			return
-		elseif not result then
-			if not logged then			
-				HCDeath:QueryPlayer()
-			end
+		elseif result and (not logged) then
+			HCDeath:QueryPlayer()
 			return
+		elseif (not logged) then
+			return
+		elseif logged then
+			logged = nil			
 		end
 	end
+
 	HookChatFrame_OnEvent(event)
 end
 
-DEFAULT_CHAT_FRAME:AddMessage("HCDeaths Loaded!", 1, 0.5, 0)
+DEFAULT_CHAT_FRAME:AddMessage("HCDeaths Loaded!", 1, 0.3, 0)
