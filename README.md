@@ -4,7 +4,7 @@ This addon will save Turtle WoW hardcore deaths to *"\WTF\Account\ACCOUNTNAME\Sa
 The format of the data is as follows:
 
 ```
-date,time,deathType,zone,playerName,playerLevel,playerClass,playerRace,playerGuild,killerName,killerLevel,killerClass,killerRace,killerGuild
+date,time,type,zone,playerName,playerLevel,playerClass,playerRace,playerGuild,killerName,killerLevel,killerClass,killerRace,killerGuild
 ```
 
 Example of SavedVariables\HCDeaths.lua:
