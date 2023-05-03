@@ -1,6 +1,10 @@
 -- This addon will save Turtle WoW hardcore deaths to "\WTF\Account\ACCOUNTNAME\SavedVariables\HCDeaths.lua" in the following format:
 -- date,time,deathType,zone,playerName,playerLevel,playerClass,playerRace,playerGuild,killerName,killerLevel,killerClass,killerRace,killerGuild
 
+HCDeaths_Settings = {
+    log = true
+}
+
 local HCDeath = CreateFrame("Frame", nil, UIParent)
 HCDeaths = {}
 local deaths = {}
@@ -53,9 +57,11 @@ function HCDeath:QueryPlayer()
 
 		if hcdeath.info then
 			logged = true
-			table.insert(HCDeaths, hcdeath.sdate..","..hcdeath.stime..","..hcdeath.deathType..","..hcdeath.zone..","..hcdeath.playerName..","..hcdeath.playerLevel..","..hcdeath.playerClass..","..hcdeath.playerRace..","..tostring(hcdeath.playerGuild)..","..hcdeath.killerName..","..tostring(hcdeath.killerLevel)..","..hcdeath.killerClass..","..tostring(hcdeath.killerRace)..","..tostring(hcdeath.killerGuild))
-			HCDeath:RemoveDeath()
-			DEFAULT_CHAT_FRAME:AddMessage("Hardcore "..hcdeath.deathType.." Death Logged ("..HCDeath:tableLength().." Deaths)", 1, 0.3, 0)
+			if HCDeaths_Settings.log then
+				table.insert(HCDeaths, hcdeath.sdate..","..hcdeath.stime..","..hcdeath.deathType..","..hcdeath.zone..","..hcdeath.playerName..","..hcdeath.playerLevel..","..hcdeath.playerClass..","..hcdeath.playerRace..","..tostring(hcdeath.playerGuild)..","..hcdeath.killerName..","..tostring(hcdeath.killerLevel)..","..hcdeath.killerClass..","..tostring(hcdeath.killerRace)..","..tostring(hcdeath.killerGuild))
+				DEFAULT_CHAT_FRAME:AddMessage("Hardcore "..hcdeath.deathType.." Death Logged ("..HCDeath:tableLength().." Deaths)", 1, 0.5, 0)
+			end
+			HCDeath:RemoveDeath()			
 		end
 	end
 end
@@ -72,8 +78,8 @@ function ChatFrame_OnEvent(event)
 		-- 1 player total
 		-- 3 players total
 
-		_, _, hcdeath = string.find(arg1,"A tragedy has occurred. Hardcore character (%a+)")
-		_, _, result = string.find(arg1,"(player%s?total)")
+		local _, _, hcdeath = string.find(arg1,"A tragedy has occurred. Hardcore character (%a+)")
+		local _, _, result = string.find(arg1,"(player%s?total)")
 
 		if hcdeath then
 			-- table.insert(HCDeaths, date("!%y%m%d%H%M")..","..arg1) -- log default message
@@ -132,4 +138,44 @@ function ChatFrame_OnEvent(event)
 	HookChatFrame_OnEvent(event)
 end
 
-DEFAULT_CHAT_FRAME:AddMessage("HCDeaths Loaded!", 1, 0.3, 0)
+function HCDeath:reset()
+	HCDeaths_Settings.log = true
+end
+
+local function HCWarn_commands(msg, editbox)
+    local function message(setting, name)
+        local state = "off"
+        if setting then state = "on" end
+        DEFAULT_CHAT_FRAME:AddMessage("HCDeaths: "..name.." is "..state..".", 1, 0.5, 0)
+    end
+	if msg == "log" then
+        if HCDeaths_Settings.log then
+            HCDeaths_Settings.log = false
+        else
+            HCDeaths_Settings.log = true
+        end
+        message(HCDeaths_Settings.log, "Logging")
+    elseif msg == "reset" then
+        HCDeath:reset()
+        DEFAULT_CHAT_FRAME:AddMessage("HCDeaths: Settings reset.", 1, 0.5, 0)
+    else
+        DEFAULT_CHAT_FRAME:AddMessage("HCDeaths usage:", 1, 0.5, 0)
+        DEFAULT_CHAT_FRAME:AddMessage("/hcdeath log - toggle logging deaths", 1, 0.5, 0)        
+        DEFAULT_CHAT_FRAME:AddMessage("/hcdeath reset - reset settings", 1, 0.5, 0)  
+    end
+end
+
+HCDeath:RegisterEvent("ADDON_LOADED")
+HCDeath:SetScript("OnEvent", function()
+    if event == "ADDON_LOADED" then
+        if not this.loaded then
+            this.loaded = true
+            SLASH_HCWARN1 = "/hcdeaths"
+            SLASH_HCWARN2 = "/hcd"
+            SlashCmdList["HCWARN"] = HCWarn_commands
+            DEFAULT_CHAT_FRAME:AddMessage("HCDeaths Loaded! /hcdeaths or /hcd", 1, 0.5, 0)
+        end
+	end
+end)
+
+-- add the hc toast
