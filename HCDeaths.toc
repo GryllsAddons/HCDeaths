@@ -1,8 +1,8 @@
 ## Interface: 11200
 ## Title: HCDeaths
 ## Author: Grylls
-## Notes: Logs Turtle WoW Hardcore Deaths to SavedVariables
-## Version: 1
-## SavedVariables: HCDeaths
+## Notes: Displays and logs hardcore deaths
+## Version: GIT
+## SavedVariables: HCDeaths_Settings, HCDeaths
 
 HCDeaths.lua
