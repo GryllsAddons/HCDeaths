@@ -25,7 +25,7 @@ You can reset the position by holding ctrl and shift and right clicking the log.
 
 Hardcore deaths will be saved to *"\WTF\Account\ACCOUNTNAME\SavedVariables\HCDeaths.lua"*.
 
-Example of an entry SavedVariables\HCDeaths.lua:
+Example of an entry in SavedVariables\HCDeaths.lua:
 
 ```
 	[1] = {
