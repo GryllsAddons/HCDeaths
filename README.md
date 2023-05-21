@@ -2,7 +2,7 @@
 
 This addon displays and logs hardcore deaths.   
 You can move the log by holding ctrl and shift and dragging ther log.    
-You can reset the posotion by holding ctrl and shift and right clicking the log.    
+You can reset the position by holding ctrl and shift and right clicking the log.    
 
 ## Commands:
 - /hcdeath message - toggle system death messages
