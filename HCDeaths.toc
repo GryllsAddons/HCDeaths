@@ -3,6 +3,6 @@
 ## Author: Grylls
 ## Notes: Displays and logs hardcore deaths
 ## Version: GIT
-## SavedVariables: HCDeaths_Settings, HCDeaths
+## SavedVariables: HCDeaths_Settings, HCDeaths, HCDeaths_LastWords
 
 HCDeaths.lua
