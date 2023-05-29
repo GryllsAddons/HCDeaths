@@ -163,16 +163,13 @@ do
 	-- texture
 	HCDeath.texture = HCDeathsToast:CreateTexture(nil,"LOW")
 	HCDeath.texture:SetAllPoints(HCDeathsToast)
-	HCDeath.texture:SetTexture(media.."Ring\\".."Ring")	
-	-- HCDeath.texture:Hide()
+	HCDeath.texture:SetTexture(media.."Ring\\".."Ring")
 
 	HCDeath.race = HCDeathsToast:CreateTexture(nil,"BACKGROUND")
 	HCDeath.race:SetPoint("CENTER", HCDeath.texture, "CENTER", -43, -24)
-	-- HCDeath.race:Hide()
 
 	HCDeath.class = HCDeathsToast:CreateTexture(nil,"BACKGROUND")
 	HCDeath.class:SetPoint("CENTER", HCDeath.texture, "CENTER", 0, 10)
-	-- HCDeath.class:Hide()
 
 	-- text
 	local font, size, outline = "Fonts\\FRIZQT__.TTF", 16, "OUTLINE"
@@ -180,13 +177,11 @@ do
 	HCDeath.level = HCDeathsToast:CreateFontString(nil, "LOW", "GameFontNormal")
 	HCDeath.level:SetPoint("TOP", HCDeath.texture, "CENTER", 42, -15)
 	HCDeath.level:SetWidth(HCDeath.texture:GetWidth())
-	-- HCDeath.level:Hide()
 	HCDeath.level:SetFont(font, size, outline)
 
 	HCDeath.name = HCDeathsToast:CreateFontString(nil, "LOW", "GameFontNormal")
 	HCDeath.name:SetPoint("TOP", HCDeath.texture, "CENTER", 0, -44)
 	HCDeath.name:SetWidth(HCDeath.texture:GetWidth())
-	-- HCDeath.name:Hide()
 	HCDeath.name:SetFont(font, size, outline)
 
 	outline = "THINOUTLINE"
@@ -194,25 +189,21 @@ do
 	HCDeath.guild = HCDeathsToast:CreateFontString(nil, "LOW", "GameFontNormal")
 	HCDeath.guild:SetPoint("TOP", HCDeath.name, "BOTTOM", 0, -12)
 	HCDeath.guild:SetWidth(HCDeath.texture:GetWidth())
-	-- HCDeath.guild:Hide()
 	HCDeath.guild:SetFont(font, size-1, outline)
 
 	HCDeath.location = HCDeathsToast:CreateFontString(nil, "LOW", "GameFontNormal")
 	HCDeath.location:SetPoint("TOP", HCDeath.guild, "BOTTOM", 0, -10)
 	HCDeath.location:SetWidth(HCDeath.texture:GetWidth()*1.5)
-	-- HCDeath.location:Hide()
 	HCDeath.location:SetFont(font, size, outline)
 
 	HCDeath.death = HCDeathsToast:CreateFontString(nil, "LOW", "GameFontNormal")
 	HCDeath.death:SetPoint("TOP", HCDeath.location, "BOTTOM", 0, -5)
 	HCDeath.death:SetWidth(HCDeath.texture:GetWidth()*1.5)
-	-- HCDeath.death:Hide()
 	HCDeath.death:SetFont(font, size, outline)
 
 	HCDeath.lastwords = HCDeathsToast:CreateFontString(nil, "LOW", "GameFontNormal")
 	HCDeath.lastwords:SetPoint("TOP", HCDeath.death, "BOTTOM", 0, -10)
 	HCDeath.lastwords:SetWidth(HCDeath.texture:GetWidth())
-	-- HCDeath.lastwords:Hide()
 	HCDeath.lastwords:SetFont(font, size, outline)
 	HCDeath.lastwords:SetTextColor(.5,.5,.5)
 	
@@ -282,19 +273,6 @@ function HCDeath:showToast()
 	HCDeath:raceSize()
 	HCDeathsToast:Show()
 
-	-- HCDeath.texture:Show()	
-	-- HCDeath.class:Show()
-	-- HCDeath.race:Show()
-
-	-- HCDeath.name:Show()
-	-- HCDeath.level:Show()
-	-- HCDeath.guild:Show()	
-	-- HCDeath.location:Show()
-	-- HCDeath.death:Show()
-	-- HCDeath.lastwords:Show()
-
-	-- HCDeath.quote:Show()
-
 	timer.time = GetTime() + HCDeaths_Settings.toasttime
 	timer:Show()
 end
@@ -302,26 +280,12 @@ end
 function HCDeath:hideToast()
 	HCDeathsToast:Hide()
 
-	-- HCDeath.texture:Hide()
-	-- HCDeath.class:Hide()
-	-- HCDeath.race:Hide()
-
-	-- HCDeath.name:Hide()
-	-- HCDeath.level:Hide()
-	-- HCDeath.guild:Hide()	
-	-- HCDeath.location:Hide()
-	-- HCDeath.death:Hide()
-	-- HCDeath.lastwords:Hide()
-	
-	-- HCDeath.quote:Hide()
-
 	HCDeath.name:SetText("")
 	HCDeath.level:SetText("")
 	HCDeath.guild:SetText("")
 	HCDeath.location:SetText("")
 	HCDeath.death:SetText("")
 	HCDeath.lastwords:SetText("")
-
 	-- HCDeath.quote:SetText("")
 end
 
@@ -396,12 +360,7 @@ function HCDeath:Toast()
 					HCDeath.race:SetTexture(media.."Ring\\"..hcdeath.playerRace)
 
 					HCDeath.level:SetText(hcdeath.playerLevel)
-					HCDeath.name:SetText("|cff"..hex..hcdeath.playerName)
-
-					local lastwords = HCDeaths_LastWords[hcdeath.playerName]
-					if lastwords then
-						HCDeath.lastwords:SetText('"'..lastwords..'"')
-					end
+					HCDeath.name:SetText("|cff"..hex..hcdeath.playerName)					
 
 					if hcdeath.playerGuild ~= "nil" then
 						HCDeath.guild:SetText("<"..hcdeath.playerGuild..">")
@@ -431,6 +390,13 @@ function HCDeath:Toast()
 							local hex = HCDeath:rgbToHex(class.r, class.g, class.b)
 							HCDeath.death:SetText("to |cff"..hex..hcdeath.killerName.."|r level "..hcdeath.killerLevel)
 						end
+
+						if hcdeath.lastWords ~= "nil" then
+							HCDeath.lastwords:SetText('"'..hcdeath.lastWords..'"')
+						else
+							HCDeath.lastwords:SetText("")
+						end
+
 						-- HCDeath.quote:SetText("May this sacrifice not be forgotten!")
 					end				
 					
@@ -464,6 +430,10 @@ function HCDeath:RemoveDeath(name)
 		if hcdeath.playerName == name then
 			table.remove(deaths, i)
 		end
+	end
+
+	if HCDeaths_LastWords[name] then
+		HCDeaths_LastWords[name] = nil
 	end
 end
 
@@ -518,13 +488,15 @@ function HCDeath:QueryPlayer()
 				end
 			end
 
+			hcdeath.lastWords = tostring(HCDeaths_LastWords[hcdeath.playerName])
+
 			if not match then
 				table.insert(HCDeaths, {
 					sdate = hcdeath.sdate,
 					stime = hcdeath.stime,
 					deathType = hcdeath.deathType,
 					zone = hcdeath.zone,
-					lastWords = tostring(HCDeaths_LastWords[hcdeath.playerName]),
+					lastWords = hcdeath.lastWords,
 					playerName = hcdeath.playerName,
 					playerLevel = hcdeath.playerLevel,
 					playerClass = hcdeath.playerClass,
@@ -1077,6 +1049,11 @@ function HCDeath:updateLog()
 					pguild = " |cff"..guildhex.."<"..hcdeath.playerGuild..">|r"
 				end
 
+				local lastwords = ""
+				if hcdeath.lastWords ~= "nil" then
+					lastwords = 'Their last words were |cff808080"'..hcdeath.lastWords..'"|r.'
+				end
+
 				-- killer
 				local kclass = RAID_CLASS_COLORS[strupper(hcdeath.killerClass)] or { r = 1, g = .5, b = 0 }
 				local classhex = HCDeath:rgbToHex(kclass.r, kclass.g, kclass.b)				
@@ -1096,13 +1073,6 @@ function HCDeath:updateLog()
 					else
 						killer = kname
 					end
-				end
-
-				local lastwords = HCDeaths_LastWords[hcdeath.playerName] or "nil"
-				if lastwords ~= "nil" then
-					lastwords = 'Their last words were |cff808080"'..lastwords..'"|r.'
-				else
-					lastwords = ""
 				end
 
 				-- tooltip
