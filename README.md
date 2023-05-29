@@ -11,6 +11,7 @@ You can reset the toast or log position by holding ctrl and shift and right clic
 - /hcd log scale - sets the death log scale
 - /hcd toast - toggle toast popups
 - /hcd toast scale - sets the toast popup scale
+- /hcd toast time - sets the number of seconds the toast will display
 - /hcd color - toggle toast ring colors
 - /hcd deathsound - toggle toast deathsounds
 - /hcd levelsound - toggle toast levelsounds
