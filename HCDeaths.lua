@@ -14,6 +14,7 @@ HCDeaths_Settings = {
 	roar = false,
 	toastscale = 1,
 	logscale = 1,
+	toasttime = 10,
 }
 
 local deathsound = {
@@ -148,7 +149,6 @@ local media = "Interface\\Addons\\HCDeaths\\media\\"
 local deaths = {}
 local queried
 local logged
-local toastTime = 10 -- number of seconds the toast will display
 local toastMove -- state of toast moving
 
 local twidth, theight = 332.8, 166.4
@@ -295,7 +295,7 @@ function HCDeath:showToast()
 
 	-- HCDeath.quote:Show()
 
-	timer.time = GetTime() + toastTime
+	timer.time = GetTime() + HCDeaths_Settings.toasttime
 	timer:Show()
 end
 
@@ -722,6 +722,7 @@ function HCDeath:reset()
 	HCDeaths_Settings.roar = false
 	HCDeaths_Settings.toastscale = 1
 	HCDeaths_Settings.logscale = 1
+	HCDeaths_Settings.toasttime = 10
 
 	HCDeath:ToastScale()
 	HCDeathsToast:SetUserPlaced(false)
@@ -759,6 +760,10 @@ local function HCDeaths_commands(msg, editbox)
 		HCDeaths_Settings.toastscale = num
 		HCDeath:ToastScale()
 		HCDeath:print("toast scale set to "..HCDeaths_Settings.toastscale)
+	elseif string.find(msg, "toast time %d") then
+		num = fontnum(msg)
+		HCDeaths_Settings.toasttime = num
+		HCDeath:print("toast time set to "..HCDeaths_Settings.toasttime.." seconds")
 	elseif string.find(msg, "log scale %d") then
 		num = fontnum(msg)
 		HCDeaths_Settings.logscale = num
@@ -835,6 +840,7 @@ local function HCDeaths_commands(msg, editbox)
 		HCDeath:print("/hcd log scale - sets the death log scale")
 		HCDeath:print("/hcd toast - toggle toast popups")
 		HCDeath:print("/hcd toast scale - sets the toast popup scale")
+		HCDeath:print("/hcd toast time - sets the number of seconds the toast will display")
 		HCDeath:print("/hcd color - toggle toast ring colors")
 		HCDeath:print("/hcd deathsound - toggle toast deathsounds")
 		HCDeath:print("/hcd levelsound - toggle toast levelsounds")
