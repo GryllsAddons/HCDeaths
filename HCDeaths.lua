@@ -141,6 +141,42 @@ local progress = {
 	},
 }
 
+local instances = {
+	-- Turtle
+	"Hateforge Quarry",
+	"Black Morass",
+	"Karazhan Crypt",
+	"Stormwind Vault",
+	"Crescent Grove",
+	-- Dungeons
+	"Blackfathom Deeps",
+	"Blackrock Depths",
+	"Blackrock Spire",
+	"Dire Maul",
+	"Gnomeregan",
+	"Maraudon",
+	"Ragefire Chasm",
+	"Razorfen Downs",
+	"Razorfen Kraul",
+	"Scarlet Monastery",
+	"Scholomance",
+	"Shadowfang Keep",
+	"Stratholme",
+	"The Deadmines",
+	"The Stockade",
+	"Uldaman",
+	"Wailing Cavems",
+	"Zul'Farrak",
+	-- Raids
+	"Blackwing Lair",
+	"Molten Core",
+	"Naxxramas",
+	"Onyxia's Lair",
+	"Ruins of Ahn'Qiraj",
+	"Temple of Ahn'Qiraj",
+	"Zul'Gurub",
+}
+
 local HCDeath = CreateFrame("Frame", nil, UIParent)
 HCDeaths = {}
 HCDeaths_LastWords = {}
@@ -360,7 +396,7 @@ function HCDeath:Toast()
 					HCDeath.race:SetTexture(media.."Ring\\"..hcdeath.playerRace)
 
 					HCDeath.level:SetText(hcdeath.playerLevel)
-					HCDeath.name:SetText("|cff"..hex..hcdeath.playerName)					
+					HCDeath.name:SetText("|cff"..hex..hcdeath.playerName)
 
 					if hcdeath.playerGuild ~= "nil" then
 						HCDeath.guild:SetText("<"..hcdeath.playerGuild..">")
@@ -377,8 +413,11 @@ function HCDeath:Toast()
 							HCDeath.location:SetText("Has reached level "..level.."!")
 							-- HCDeath.quote:SetText("Their ascendance towards immortality continues")
 						end
-					else				
+					else
+						-- local locHex = HCDeath:locHex(hcdeath.zone)		
+						-- HCDeath.location:SetText("Has died in ".."|cff"..locHex..hcdeath.zone)
 						HCDeath.location:SetText("Has died in "..hcdeath.zone)
+						HCDeath.name:SetText("|cff"..hex..hcdeath.playerName)
 						if hcdeath.deathType == "PVE" then
 							if hcdeath.killerLevel then
 								HCDeath.death:SetText("to "..hcdeath.killerName.." level "..hcdeath.killerLevel)
@@ -425,10 +464,36 @@ function HCDeath:rgbToHex(r, g, b)
     return string.format("%02X%02X%02X", r * 255, g * 255, b * 255)
 end
 
+function HCDeath:isInstance(location)
+	for _, loc in pairs(instances) do
+		if loc == location then
+			return true
+		end
+	end
+  	return false
+end
+
+function HCDeath:locHex(location)
+	if HCDeath:isInstance(location) then
+		return "FF3300"
+	end
+	return HCDeath:rgbToHex(1, .5, 0)
+end
+
+function HCDeath:locTex(dtype, location)
+	if dtype == "PVP" then
+		return media.."Log\\PVP"
+	elseif HCDeath:isInstance(location) then
+		return media.."Log\\INSTANCE"
+	end
+	return media.."Log\\PVE"
+end
+
 function HCDeath:RemoveDeath(name)
 	for i, hcdeath in ipairs(deaths) do
 		if hcdeath.playerName == name then
 			table.remove(deaths, i)
+			break
 		end
 	end
 
@@ -441,6 +506,7 @@ function HCDeath:RemoveLevelDeath(name)
 	for i, hcdeath in ipairs(HCDeaths) do
 		if hcdeath.playerName == name then
 			table.remove(HCDeaths, i)
+			break
 		end
 	end
 end
@@ -990,7 +1056,9 @@ function HCDeath:updateLog()
 			-- guild:SetPoint("TOPLEFT", HCDeathsLog.container, "TOPLEFT", 180, -yoff)
 			
 			-- type
-			dtype:SetTexture(media.."Log\\"..hcdeath.deathType)
+			-- locTexture
+			local locTex = HCDeath:locTex(hcdeath.deathType, hcdeath.zone)
+			dtype:SetTexture(locTex)
 			dtype:Show()
 
 			-- level
@@ -1049,6 +1117,9 @@ function HCDeath:updateLog()
 					pguild = " |cff"..guildhex.."<"..hcdeath.playerGuild..">|r"
 				end
 
+				local locHex = HCDeath:locHex(hcdeath.zone)	
+				local zone = "|cff"..locHex..hcdeath.zone.."|r"
+
 				local lastwords = ""
 				if hcdeath.lastWords ~= "nil" then
 					lastwords = 'Their last words were |cff808080"'..hcdeath.lastWords..'"|r.'
@@ -1081,7 +1152,7 @@ function HCDeath:updateLog()
 				end
 				GameTooltip:ClearLines()
 				GameTooltip:AddLine(death.type, death.r, death.g, death.b)
-				GameTooltip:AddLine(pname..pguild.." the level "..hcdeath.playerLevel.." "..hcdeath.playerRace.." "..pclass.." died in "..hcdeath.zone.." to "..killer..". "..lastwords,_,_,_,true)
+				GameTooltip:AddLine(pname..pguild.." the level "..hcdeath.playerLevel.." "..hcdeath.playerRace.." "..pclass.." died in "..zone.." to "..killer..". "..lastwords,_,_,_,true)
 				-- GameTooltip:AddLine("Date: "..hcdeath.sdate.." Time: "..hcdeath.stime)
 				GameTooltip:Show()
 			end)
