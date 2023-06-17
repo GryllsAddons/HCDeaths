@@ -492,7 +492,7 @@ end
 function HCDeath:RemoveDeath(name)
 	for i, hcdeath in ipairs(deaths) do
 		if hcdeath.playerName == name then
-			table.remove(deaths, i)
+			table.remove(deaths, i)			
 			break
 		end
 	end
@@ -537,7 +537,7 @@ function HCDeath:QueryPlayer()
 			end
 		end
 
-		if (not hcdeath.killerClass) and hcdeath.deathType == "PVP" then
+		if (hcdeath.deathType == "PVP") and (not hcdeath.killerClass) then
 			hcdeath.killerGuild, hcdeath.killerLevel, hcdeath.killerRace, hcdeath.killerClass = HCDeath:GetWhoInfo(hcdeath.killerName)
 			if hcdeath.killerClass then
 				hcdeath.info = true
@@ -599,10 +599,10 @@ end
 function HCDeath:whoPlayer(player, level, zone)
 	local filter
     
-	if player and level then
-		filter = "n-"..player.." "..level
-	elseif player and zone then
+	if player and zone then
 		filter = "n-"..player.." ".."z-"..zone
+	elseif player and level then
+		filter = "n-"..player.." "..level
 	end
 
 	if filter then
@@ -629,11 +629,25 @@ function HCDeath:extractLinks(str)
     end
     result = result .. string.sub(str, start)
     return result
-end	
+end
+
+local testmsg
+function HCDeath:test(dtype, player, plevel, killer)	
+	if dtype == "pve" then
+		testmsg = "A tragedy has occurred. Hardcore character "..player.." died of natural causes at level "..plevel..". May this sacrifice not be forgotten."
+	elseif dtype == "pvp" then
+		testmsg = "A tragedy has occurred. Hardcore character "..player.." has fallen in PvP to "..killer.." at level "..plevel.."."
+	end
+	SendChatMessage(".server info")
+end
 
 local HookChatFrame_OnEvent = ChatFrame_OnEvent
-function ChatFrame_OnEvent(event)	
+function ChatFrame_OnEvent(event)
 	if (event == "CHAT_MSG_SYSTEM") then
+		if testmsg then
+			arg1 = testmsg
+			testmsg = nil
+		end
 
 		-- Examples of Turtle WoW HC progress messages:
 		-- "PLAYERNAME has reached level 20/30/40/50 in Hardcore mode! Their ascendance towards immortality continues, however, so do the dangers they will face.
@@ -870,6 +884,9 @@ local function HCDeaths_commands(msg, editbox)
     elseif msg == "reset" then
         HCDeath:reset()
 		HCDeath:print("settings reset")
+	-- elseif msg == "test" then
+	-- 	HCDeath:test("pve", "Tents", "10")
+	-- 	HCDeath:test("pvp", "player", "level", "killer")
     else
 		HCDeath:print("commands:")
 		HCDeath:print("/hcd message - toggle system death messages")
