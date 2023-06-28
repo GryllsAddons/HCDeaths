@@ -354,7 +354,7 @@ function HCDeath:color(level)
 end
 
 function HCDeath:sound(deathType, playerRace, playerLevel)
-	if not (deathType == "LVL") then
+	if (deathType == "PVP" or deathType == "PVE") then
 		if HCDeaths_Settings.deathsound then
 			if HCDeaths_Settings.roar then
 				local num = math.random(1, 2)
@@ -363,16 +363,19 @@ function HCDeath:sound(deathType, playerRace, playerLevel)
 				PlaySoundFile("Sound/interface/RaidWarning.wav")
 			end
 		end
-	else
-		-- deathType == "LVL"
+	else		
 		if HCDeaths_Settings.levelsound then
-			if playerLevel == 60 then
-				PlaySoundFile("Sound\\Doodad\\G_FireworkLauncher02Custom0.wav")
+			if deathType == "LVL" then
+				if playerLevel == 60 then
+					PlaySoundFile("Sound\\Doodad\\G_FireworkLauncher02Custom0.wav")
+				end
+			elseif deathType == "INFSTART" then
+				PlaySoundFile("\\Sound\\Creature\\Razuvious\\RAZ_NAXX_AGGRO01.wav")				
 			end
 
 			local num = math.random(1, 4)
 			PlaySoundFile(progress[playerRace][num])
-		end
+		end		
 	end
 end
 
@@ -384,8 +387,8 @@ function HCDeath:Toast()
 				if hcdeath.info then
 					HCDeath:RemoveDeath(hcdeath.playerName)
 
-					if hcdeath.deathType == "LVL" then
-						HCDeath:RemoveLevelDeath(hcdeath.playerName)
+					if (hcdeath.deathType == "LVL" or hcdeath.deathType == "INFSTART") then
+						HCDeath:RemovePlayerDeath(hcdeath.playerName)
 					end
 
 					local level = tonumber(hcdeath.playerLevel)
@@ -405,7 +408,7 @@ function HCDeath:Toast()
 					end
 
 					if hcdeath.deathType == "LVL" then
-						HCDeath.death:SetText("")				
+						HCDeath.death:SetText("")
 						if level == 60 then
 							HCDeath.location:SetText("Has transcended death and reached level 60!")
 							-- HCDeath.quote:SetText("They shall henceforth be known as the Immortal")
@@ -413,6 +416,9 @@ function HCDeath:Toast()
 							HCDeath.location:SetText("Has reached level "..level.."!")
 							-- HCDeath.quote:SetText("Their ascendance towards immortality continues")
 						end
+					elseif hcdeath.deathType == "INFSTART" then
+						HCDeath.death:SetText("")
+						HCDeath.location:SetText("Has begun the Inferno Challenge!")
 					else
 						-- local locHex = HCDeath:locHex(hcdeath.zone)		
 						-- HCDeath.location:SetText("Has died in ".."|cff"..locHex..hcdeath.zone)
@@ -442,7 +448,7 @@ function HCDeath:Toast()
 					HCDeath:sound(hcdeath.deathType, hcdeath.playerRace, level)					
 					HCDeath:color(level)
 					HCDeath:showToast()
-					if hcdeath.deathType ~= "LVL" then
+					if (hcdeath.deathType == "PVP" or hcdeath.deathType == "PVE") then
 						HCDeath:updateLog(true)
 					end
 					break
@@ -475,18 +481,19 @@ end
 
 function HCDeath:locHex(location)
 	if HCDeath:isInstance(location) then
-		return "FF3300"
+		return "A330C9"
 	end
 	return HCDeath:rgbToHex(1, .5, 0)
 end
 
-function HCDeath:locTex(dtype, location)
+function HCDeath:locTex(dtype, hctype, location)
 	if dtype == "PVP" then
 		return media.."Log\\PVP"
-	elseif HCDeath:isInstance(location) then
-		return media.."Log\\INSTANCE"
+	elseif hctype == "INF" then
+		return media.."Log\\INFERNO"
+	else
+		return media.."Log\\PVE"
 	end
-	return media.."Log\\PVE"
 end
 
 function HCDeath:RemoveDeath(name)
@@ -502,7 +509,7 @@ function HCDeath:RemoveDeath(name)
 	end
 end
 
-function HCDeath:RemoveLevelDeath(name)
+function HCDeath:RemovePlayerDeath(name)
 	for i, hcdeath in ipairs(HCDeaths) do
 		if hcdeath.playerName == name then
 			table.remove(HCDeaths, i)
@@ -529,7 +536,7 @@ function HCDeath:QueryPlayer()
 	for _, hcdeath in pairs(deaths) do
 		if not hcdeath.playerClass then
 			hcdeath.playerGuild, hcdeath.playerLevel, hcdeath.playerRace, hcdeath.playerClass, hcdeath.zone = HCDeath:GetWhoInfo(hcdeath.playerName)
-			if (hcdeath.deathType == "PVE" or hcdeath.deathType == "LVL") and hcdeath.playerClass then
+			if (hcdeath.deathType ~= "PVP") and hcdeath.playerClass then
 				hcdeath.info = true
 			elseif (hcdeath.deathType == "PVP") and (not hcdeath.killerClass) then
 				HCDeath:whoPlayer(hcdeath.killerName, _, hcdeath.zone)
@@ -561,6 +568,7 @@ function HCDeath:QueryPlayer()
 					sdate = hcdeath.sdate,
 					stime = hcdeath.stime,
 					deathType = hcdeath.deathType,
+					hcType = hcdeath.hcType,
 					zone = hcdeath.zone,
 					lastWords = hcdeath.lastWords,
 					playerName = hcdeath.playerName,
@@ -575,11 +583,7 @@ function HCDeath:QueryPlayer()
 					killerGuild = tostring(hcdeath.killerGuild)
 				})
 
-				-- if hcdeath.deathType ~= "LVL" then
-				-- 	HCDeath:print(hcdeath.deathType.." Death Logged")
-				-- else
-				-- 	HCDeath:print("Progress Logged")
-				-- end
+				-- HCDeath:print("DEBUG: logged")
 			end
 		end
 	end
@@ -603,11 +607,15 @@ function HCDeath:whoPlayer(player, level, zone)
 		filter = "n-"..player.." ".."z-"..zone
 	elseif player and level then
 		filter = "n-"..player.." "..level
+	elseif player then
+		filter = "n-"..player
 	end
 
 	if filter then
 		SendWho(filter)
 		queried = true
+	else
+		queried = nil
 	end
 end
 
@@ -653,10 +661,16 @@ function ChatFrame_OnEvent(event)
 		-- "PLAYERNAME has reached level 20/30/40/50 in Hardcore mode! Their ascendance towards immortality continues, however, so do the dangers they will face.
 		-- "PLAYERNAME has transcended death and reached level 60 on Hardcore mode without dying once! PLAYERNAME shall henceforth be known as the Immortal!"
 
-		-- Examples of Turtle WoW HC death messages:
-		-- PvP = "A tragedy has occurred. Hardcore character PLAYERNAME has fallen in PvP to KILLERNAME at level PLAYERLEVEL. May this sacrifice not be forgotten."
-		-- PVE = "A tragedy has occurred. Hardcore character PLAYERNAME has fallen to MOBNAME1 MOBNAME2 (level KILLERLEVEL) at level PLAYERLEVEL. May this sacrifice not be forgotten."
-		-- PVE = "A tragedy has occurred. Hardcore character PLAYERNAME died of natural causes at level PLAYERLEVEL. May this sacrifice not be forgotten."
+		-- Examples of Turtle WoW Inferno messages:
+		-- Started = "PLAYERNAME has laughed in the face of death in the Hardcore challenge. PLAYERNAME has begun the Inferno Challenge!"
+		-- PVE (*does not show PLAYERNAME*) = "A tragedy has occurred. Inferno character has fallen to MOBNAME1 MOBNAME2 (level KILLERLEVEL) at level PLAYERLEVEL..."
+		-- NAT = ??
+		-- PVP = ??
+
+		-- Examples of Turtle WoW Hardcore messages:
+		-- PVE = "A tragedy has occurred. Hardcore character PLAYERNAME has fallen to MOBNAME1 MOBNAME2 (level KILLERLEVEL) at level PLAYERLEVEL..."
+		-- NAT = "A tragedy has occurred. Hardcore character PLAYERNAME died of natural causes at level PLAYERLEVEL..."
+		-- PvP = "A tragedy has occurred. Hardcore character PLAYERNAME has fallen in PvP to KILLERNAME at level PLAYERLEVEL..."
 
 		-- Example of /who result messages:
 		-- [PLAYERNAME]: Level PLAYERLEVEL PLAYERRACE PLAYERCLASS <PLAYERGUILD> - AREA
@@ -665,6 +679,8 @@ function ChatFrame_OnEvent(event)
 		local _, _, hcprogress = string.find(arg1, "(%a+) has reached level (%d%d) in Hardcore mode")
 		local _, _, hcimmortal = string.find(arg1, "(%a+) has transcended death and reached level 60")
 		local _, _, hcdeath = string.find(arg1,"A tragedy has occurred. Hardcore character (%a+)")
+		local _, _, infstart = string.find(arg1,"(%a+) has begun the Inferno Challenge")
+		-- local _, _, infdeath = string.find(arg1,"A tragedy has occurred. Inferno character (%a+)")
 
 		if hcprogress or hcimmortal then
 			HCDeath:systemMessage(arg1)
@@ -676,6 +692,7 @@ function ChatFrame_OnEvent(event)
 				sdate = date("!%Y/%m/%d"),
 				stime = date("!%H:%M:%S"),
 				deathType = "LVL",
+				hcType = "HC",
 				zone = nil,
 				playerName = playerName,
 				playerLevel = playerLevel,
@@ -687,8 +704,37 @@ function ChatFrame_OnEvent(event)
 
 			HCDeath:SendWho()
 			return
-		elseif hcdeath then
+		elseif infstart then
 			HCDeath:systemMessage(arg1)
+			
+			local _, _, playerName = string.find(arg1,"(%a+) has")
+
+			table.insert(deaths, {
+				sdate = date("!%Y/%m/%d"),
+				stime = date("!%H:%M:%S"),
+				deathType = "INFSTART",
+				hcType = "INF",
+				zone = nil,
+				playerName = playerName,
+				playerLevel = nil,
+				playerClass = nil,
+				playerRace = nil,
+				playerGuild = nil,
+				info = nil
+			})
+
+			HCDeath:SendWho()
+			return
+		elseif hcdeath then --or infdeath then
+			HCDeath:systemMessage(arg1)
+
+			local hcType = "HC"
+			-- local hcType 
+			-- if hcdeath then
+			-- 	hcType = "HC"
+			-- elseif infdeath then
+			-- 	hcType = "INF"
+			-- end			
 
 			local pvp, natural, playerLevel, deathType, killerName, killerLevel, killerClass
 			_, _, pvp = string.find(arg1,"(PvP)")
@@ -714,6 +760,7 @@ function ChatFrame_OnEvent(event)
 				sdate = date("!%Y/%m/%d"),
 				stime = date("!%H:%M:%S"),
 				deathType = deathType,
+				hcType = hcType,
 				zone = nil,
 				playerName = hcdeath,
 				playerLevel = playerLevel,
@@ -739,7 +786,7 @@ function ChatFrame_OnEvent(event)
 			if not result then
 				_, _, result = string.find(arg1, "%[(.-)%]")
 				for _, hcdeath in pairs(deaths) do
-					if result == hcdeath.playerName then
+					if (result == hcdeath.playerName) or (result == hcdeath.killerName) then
 						break
 					end				
 				end
@@ -1055,7 +1102,7 @@ function HCDeath:updateLog()
 		if not hcdeath then return end
 		if not HCDeathsLog.type[limit] then return end
 
-		if hcdeath.deathType ~= "LVL" then
+		if (hcdeath.deathType == "PVP" or hcdeath.deathType == "PVE") then
 			local dtype = HCDeathsLog.type[limit]		
 			local level = HCDeathsLog.level[limit]
 			local name = HCDeathsLog.name[limit]		
@@ -1074,7 +1121,7 @@ function HCDeath:updateLog()
 			
 			-- type
 			-- locTexture
-			local locTex = HCDeath:locTex(hcdeath.deathType, hcdeath.zone)
+			local locTex = HCDeath:locTex(hcdeath.deathType, hcdeath.hcType, hcdeath.zone)
 			dtype:SetTexture(locTex)
 			dtype:Show()
 
