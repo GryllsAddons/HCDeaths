@@ -1172,7 +1172,6 @@ function HCDeath:updateLog()
 					death.b = 0
 				end
 
-				local normhex = "FFFF00"
 				local guildhex = HCDeath:rgbToHex(116/255, 113/255, 255/255)
 				-- player			
 				local pname = "|cff"..classhex..hcdeath.playerName.."|r"
