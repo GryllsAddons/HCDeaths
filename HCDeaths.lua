@@ -1172,6 +1172,7 @@ function HCDeath:updateLog()
 					death.b = 0
 				end
 
+				local normhex = "FFFF00"
 				local guildhex = HCDeath:rgbToHex(116/255, 113/255, 255/255)
 				-- player			
 				local pname = "|cff"..classhex..hcdeath.playerName.."|r"
@@ -1196,27 +1197,27 @@ function HCDeath:updateLog()
 				kclass = "|cff"..classhex..hcdeath.killerClass.."|r"
 				local kguild = ""
 				if hcdeath.killerGuild ~= "nil" then
-					kguild = " |cff"..guildhex.."<"..hcdeath.killerGuild..">|r"
+					kguild = "|cff"..guildhex.."<"..hcdeath.killerGuild..">|r"
 				end
 				
 				local killer
 				if hcdeath.deathType == "PVP" then
-					killer = kname..kguild.." the level "..hcdeath.killerLevel.." "..hcdeath.killerRace.." "..kclass
+					killer = kname.." "..kguild..NORMAL_FONT_COLOR_CODE.." the level "..hcdeath.killerLevel.." "..hcdeath.killerRace.." |r"..kclass
 				else
 					if hcdeath.killerLevel ~= "nil" then
-						killer = kname.." level "..hcdeath.killerLevel
+						killer = kname..NORMAL_FONT_COLOR_CODE.." level "..hcdeath.killerLevel.."|r"
 					else
 						killer = kname
 					end
 				end
 
-				-- tooltip
+				-- tooltip				
 				if not GameTooltip:IsShown() then 
 					GameTooltip:SetOwner(this, ANCHOR_BOTTOMLEFT)
 				end
 				GameTooltip:ClearLines()
 				GameTooltip:AddLine(death.type, death.r, death.g, death.b)
-				GameTooltip:AddLine(pname..pguild.." the level "..hcdeath.playerLevel.." "..hcdeath.playerRace.." "..pclass.." died in "..zone.." to "..killer..". "..lastwords,_,_,_,true)
+				GameTooltip:AddLine(pname..pguild..NORMAL_FONT_COLOR_CODE.." the level "..hcdeath.playerLevel.." "..hcdeath.playerRace.." |r"..pclass..NORMAL_FONT_COLOR_CODE.." died in |r"..zone..NORMAL_FONT_COLOR_CODE.." to |r"..killer..NORMAL_FONT_COLOR_CODE..". |r"..lastwords,_,_,_,true)
 				-- GameTooltip:AddLine("Date: "..hcdeath.sdate.." Time: "..hcdeath.stime)
 				GameTooltip:Show()
 			end)
