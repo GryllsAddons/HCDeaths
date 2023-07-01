@@ -1186,7 +1186,7 @@ function HCDeath:updateLog()
 
 				local lastwords = ""
 				if hcdeath.lastWords ~= "nil" then
-					lastwords = 'Their last words were |cff808080"'..hcdeath.lastWords..'"|r.'
+					lastwords = NORMAL_FONT_COLOR_CODE..'Their last words were '..GRAY_FONT_COLOR_CODE..'"'..hcdeath.lastWords..'"'..NORMAL_FONT_COLOR_CODE..'.|r'
 				end
 
 				-- killer
