@@ -199,7 +199,7 @@ do
 	-- texture
 	HCDeath.texture = HCDeathsToast:CreateTexture(nil,"LOW")
 	HCDeath.texture:SetAllPoints(HCDeathsToast)
-	HCDeath.texture:SetTexture(media.."Ring\\".."Ring")
+	HCDeath.texture:SetTexture(media.."Ring\\".."Ring_pfUI")
 
 	HCDeath.race = HCDeathsToast:CreateTexture(nil,"BACKGROUND")
 	HCDeath.race:SetPoint("CENTER", HCDeath.texture, "CENTER", -43, -24)
@@ -952,13 +952,13 @@ local function HCDeaths_commands(msg, editbox)
 end
 
 do  
-	local max_width = 210
+	local max_width = 205
 	local max_height = 56
   
 	local HCDeathsLog = CreateFrame("Button", "HCDeathsLog", UIParent)
 	HCDeathsLog:Hide()
 
-	HCDeathsLog:SetWidth(max_width)
+	HCDeathsLog:SetWidth(max_width-20)
 	HCDeathsLog:SetHeight(max_height)
   
 	HCDeathsLog:SetBackdrop({
@@ -970,30 +970,23 @@ do
 	})
 	HCDeathsLog:SetBackdropColor(0,0,0)
 	HCDeathsLog:SetBackdropBorderColor(.5,.5,.5,1)
-
-	HCDeathsLog.icon = HCDeathsLog:CreateTexture(nil,"LOW")
-	HCDeathsLog.icon:SetPoint("CENTER", HCDeathsLog, "TOPLEFT", 14, -6)
-	HCDeathsLog.icon:SetTexture(media.."Log\\".."Skull")
-	HCDeathsLog.icon:SetWidth(38)
-	HCDeathsLog.icon:SetHeight(38)
-  
-	local yoffset = -20
   
 	HCDeathsLog.title = HCDeathsLog:CreateFontString(nil, "LOW", "GameFontNormal")
-	HCDeathsLog.title:SetPoint("TOPLEFT", HCDeathsLog, "TOPLEFT", 30, -6)
-	HCDeathsLog.title:SetText("Hardcore Deaths")
+	-- HCDeathsLog.title:SetPoint("TOPLEFT", HCDeathsLog, "TOPLEFT", 8, -7)
+	HCDeathsLog.title:SetPoint("TOP", HCDeathsLog, "TOP", 0, -7)
+	HCDeathsLog.title:SetText("HCDeaths")
 	HCDeathsLog.title:SetTextColor(1, .5, 0, 1)
   
 	HCDeathsLog.scrollframe = CreateFrame("ScrollFrame", "HCDeathsLogScrollframe", HCDeathsLog, "UIPanelScrollFrameTemplate")
 	HCDeathsLog.scrollframe:SetHeight(max_height + 20)
-	HCDeathsLog.scrollframe:SetWidth(max_width - 40)
-	HCDeathsLog.scrollframe:SetPoint('CENTER', HCDeathsLog, -10, -8)
-	HCDeathsLog.scrollframe:Hide()
+	HCDeathsLog.scrollframe:SetWidth(max_width - 34)
+	HCDeathsLog.scrollframe:SetPoint('CENTER', HCDeathsLog, 0, -8)
+	HCDeathsLog.scrollframe:Hide()	
   
 	HCDeathsLog.container = CreateFrame("Frame", "HCDeathsLogContainer", HCDeathsLog)
 	HCDeathsLog.container:SetHeight(max_height - 5)
-	HCDeathsLog.container:SetWidth(max_width - 40)
-	HCDeathsLog.container:SetPoint("CENTER", HCDeathsLog, 10, 0)
+	HCDeathsLog.container:SetWidth(max_width)
+	HCDeathsLog.container:SetPoint("CENTER", HCDeathsLog, 0, 0)
   
 	HCDeathsLog:SetMovable(true)
 	HCDeathsLog:SetClampedToScreen(true)
@@ -1024,7 +1017,7 @@ do
 		HCDeathsLog:SetUserPlaced(false)
 		HCDeathsLog:position()
 	  end
-	end)
+	end)	
 
 	HCDeathsLog.limit = 50
 	HCDeathsLog.type = {}
@@ -1072,6 +1065,32 @@ do
 			GameTooltip:Hide()
 		end)
 	end
+
+	local function mouseWheel()
+		local scrollBar = getglobal(this:GetName().."ScrollBar");
+
+		if arg1 > 0 then
+		  if IsShiftKeyDown() then
+			scrollBar:SetValue(0)
+		  else
+			scrollBar:SetValue(scrollBar:GetValue() - (scrollBar:GetHeight() / 2))
+		  end
+		elseif arg1 < 0 then
+		  if IsShiftKeyDown() then
+			scrollBar:SetValue(1000)			
+		  else
+			scrollBar:SetValue(scrollBar:GetValue() + (scrollBar:GetHeight() / 2))
+		  end
+		end
+
+		if scrollBar:GetValue() > 0 then
+			scrollBar:SetAlpha(1)
+		else
+			scrollBar:SetAlpha(0)
+		end
+	end
+
+	HCDeathsLog.scrollframe:SetScript("OnMouseWheel", mouseWheel)
 end
 
 function HCDeath:ToggleLog()
@@ -1091,7 +1110,7 @@ function HCDeath:updateLog()
 	local xoff = 10
 	local yoff = 0
 
-	HCDeathsLog:SetHeight(75 + 30)
+	HCDeathsLog:SetHeight(105)
 
 	local max = HCDeath:tableLength()
 	local min = max - HCDeathsLog.limit
@@ -1227,10 +1246,11 @@ function HCDeath:updateLog()
 			if not HCDeathsLog.scrollframe:IsShown() then
 				HCDeathsLog.container:SetParent(HCDeathsLog.scrollframe)
 				HCDeathsLog.container:SetHeight(HCDeathsLog.scrollframe:GetHeight())
-				HCDeathsLog.container:SetWidth(HCDeathsLog.scrollframe:GetWidth() + 20)
+				HCDeathsLog.container:SetWidth(HCDeathsLog.scrollframe:GetWidth())
 		
 				HCDeathsLog.scrollframe:SetScrollChild(HCDeathsLog.container)
 				HCDeathsLog.scrollframe:Show()
+				HCDeathsLogScrollframeScrollBar:SetAlpha(0)
 			end
 		end
 	end
