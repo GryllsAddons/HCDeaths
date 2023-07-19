@@ -199,7 +199,7 @@ do
 	-- texture
 	HCDeath.texture = HCDeathsToast:CreateTexture(nil,"LOW")
 	HCDeath.texture:SetAllPoints(HCDeathsToast)
-	HCDeath.texture:SetTexture(media.."Ring\\".."Ring_pfUI")
+	HCDeath.texture:SetTexture(media.."Ring\\".."Ring")
 
 	HCDeath.race = HCDeathsToast:CreateTexture(nil,"BACKGROUND")
 	HCDeath.race:SetPoint("CENTER", HCDeath.texture, "CENTER", -43, -24)
