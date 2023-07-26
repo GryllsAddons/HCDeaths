@@ -15,6 +15,7 @@ HCDeaths_Settings = {
 	toastscale = 1,
 	logscale = 1,
 	toasttime = 10,
+	progress = true,
 }
 
 local deathsound = {
@@ -184,12 +185,36 @@ HCDeaths_LastWords = {}
 local media = "Interface\\Addons\\HCDeaths\\media\\"
 local deaths = {}
 local queried
+local queriedPlayer
 local logged
 local toastMove -- state of toast moving
 
+local is_pfUI
+
 local twidth, theight = 332.8, 166.4
 
-do	
+local queryTimer = CreateFrame("Frame", nil, HCDeath)
+queryTimer.timeout = 1
+queryTimer:Hide()
+queryTimer:SetScript("OnUpdate", function()
+	if (not queried) or (not this.time) then 
+		this:Hide()
+	elseif GetTime() >= this.time + this.timeout then
+		if not result then
+			HCDeath:RemoveDeath(queriedPlayer)
+			HCDeath:RemovePlayerDeath(queriedPlayer)
+			HCDeath:updateLog(true)
+			-- reset
+			this.time = nil		
+			logged = nil
+			queried = nil
+			-- HCDeath:print("DEBUG: query timed out")
+			this:Hide()
+		end
+	end
+end)
+
+function HCDeath:setupToast()
 	-- toast
 	HCDeathsToast = CreateFrame("Button", "HCDeathsToast", HCDeath)
 	HCDeathsToast:SetWidth(twidth)
@@ -198,8 +223,7 @@ do
 
 	-- texture
 	HCDeath.texture = HCDeathsToast:CreateTexture(nil,"LOW")
-	HCDeath.texture:SetAllPoints(HCDeathsToast)
-	HCDeath.texture:SetTexture(media.."Ring\\".."Ring")
+	HCDeath.texture:SetAllPoints(HCDeathsToast)	
 
 	HCDeath.race = HCDeathsToast:CreateTexture(nil,"BACKGROUND")
 	HCDeath.race:SetPoint("CENTER", HCDeath.texture, "CENTER", -43, -24)
@@ -215,30 +239,25 @@ do
 	HCDeath.level:SetWidth(HCDeath.texture:GetWidth())
 	HCDeath.level:SetFont(font, size, outline)
 
-	HCDeath.name = HCDeathsToast:CreateFontString(nil, "LOW", "GameFontNormal")
-	HCDeath.name:SetPoint("TOP", HCDeath.texture, "CENTER", 0, -44)
+	HCDeath.name = HCDeathsToast:CreateFontString(nil, "LOW", "GameFontNormal")	
 	HCDeath.name:SetWidth(HCDeath.texture:GetWidth())
 	HCDeath.name:SetFont(font, size, outline)
 
 	outline = "THINOUTLINE"
 
-	HCDeath.guild = HCDeathsToast:CreateFontString(nil, "LOW", "GameFontNormal")
-	HCDeath.guild:SetPoint("TOP", HCDeath.name, "BOTTOM", 0, -12)
+	HCDeath.guild = HCDeathsToast:CreateFontString(nil, "LOW", "GameFontNormal")	
 	HCDeath.guild:SetWidth(HCDeath.texture:GetWidth())
 	HCDeath.guild:SetFont(font, size-1, outline)
 
-	HCDeath.location = HCDeathsToast:CreateFontString(nil, "LOW", "GameFontNormal")
-	HCDeath.location:SetPoint("TOP", HCDeath.guild, "BOTTOM", 0, -10)
+	HCDeath.location = HCDeathsToast:CreateFontString(nil, "LOW", "GameFontNormal")	
 	HCDeath.location:SetWidth(HCDeath.texture:GetWidth()*1.5)
 	HCDeath.location:SetFont(font, size, outline)
 
-	HCDeath.death = HCDeathsToast:CreateFontString(nil, "LOW", "GameFontNormal")
-	HCDeath.death:SetPoint("TOP", HCDeath.location, "BOTTOM", 0, -5)
+	HCDeath.death = HCDeathsToast:CreateFontString(nil, "LOW", "GameFontNormal")	
 	HCDeath.death:SetWidth(HCDeath.texture:GetWidth()*1.5)
 	HCDeath.death:SetFont(font, size, outline)
 
 	HCDeath.lastwords = HCDeathsToast:CreateFontString(nil, "LOW", "GameFontNormal")
-	HCDeath.lastwords:SetPoint("TOP", HCDeath.death, "BOTTOM", 0, -10)
 	HCDeath.lastwords:SetWidth(HCDeath.texture:GetWidth())
 	HCDeath.lastwords:SetFont(font, size, outline)
 	HCDeath.lastwords:SetTextColor(.5,.5,.5)
@@ -248,6 +267,22 @@ do
 	-- HCDeath.quote:SetWidth(HCDeath.texture:GetWidth()*1.5)
 	-- HCDeath.quote:Hide()
 	-- HCDeath.quote:SetFont("Fonts\\SKURRI.TTF", size, outline)
+
+	if is_pfUI then
+		HCDeath.texture:SetTexture(media.."Ring\\".."Ring_pfUI")		
+		HCDeath.name:SetPoint("TOP", HCDeath.texture, "CENTER", 0, -44)
+		HCDeath.guild:SetPoint("TOP", HCDeath.name, "BOTTOM", 0, -2)
+		HCDeath.location:SetPoint("TOP", HCDeath.guild, "BOTTOM", 0, -10)
+		HCDeath.death:SetPoint("TOP", HCDeath.location, "BOTTOM", 0, -5)		
+		HCDeath.lastwords:SetPoint("TOP", HCDeath.death, "BOTTOM", 0, -10)
+	else
+		HCDeath.texture:SetTexture(media.."Ring\\".."Ring")
+		HCDeath.name:SetPoint("TOP", HCDeath.texture, "CENTER", 0, -44)
+		HCDeath.guild:SetPoint("TOP", HCDeath.name, "BOTTOM", 0, -12)
+		HCDeath.location:SetPoint("TOP", HCDeath.guild, "BOTTOM", 0, -10)
+		HCDeath.death:SetPoint("TOP", HCDeath.location, "BOTTOM", 0, -5)		
+		HCDeath.lastwords:SetPoint("TOP", HCDeath.death, "BOTTOM", 0, -10)
+	end
 
 	HCDeathsToast:SetMovable(true)
 	HCDeathsToast:SetClampedToScreen(true)
@@ -281,9 +316,9 @@ do
 	end)
 end
 
-local timer = CreateFrame("Frame", nil, HCDeath)
-timer:Hide()
-timer:SetScript("OnUpdate", function()
+local toastTimer = CreateFrame("Frame", nil, HCDeath)
+toastTimer:Hide()
+toastTimer:SetScript("OnUpdate", function()
 	if GetTime() >= this.time then
 		this.time = nil
 		HCDeath:hideToast()
@@ -291,6 +326,10 @@ timer:SetScript("OnUpdate", function()
 		HCDeath:Toast()
 	end
 end)
+
+function HCDeath:Check_pfUI()
+    is_pfUI = IsAddOnLoaded("pfUI")
+end
 
 function HCDeath:classSize()
 	local s = 85
@@ -309,8 +348,8 @@ function HCDeath:showToast()
 	HCDeath:raceSize()
 	HCDeathsToast:Show()
 
-	timer.time = GetTime() + HCDeaths_Settings.toasttime
-	timer:Show()
+	toastTimer.time = GetTime() + HCDeaths_Settings.toasttime
+	toastTimer:Show()
 end
 
 function HCDeath:hideToast()
@@ -390,6 +429,8 @@ function HCDeath:Toast()
 					if (hcdeath.deathType == "LVL" or hcdeath.deathType == "INFSTART") then
 						HCDeath:RemovePlayerDeath(hcdeath.playerName)
 					end
+
+					if (hcdeath.deathType == "LVL") and (not HCDeaths_Settings.progress) then return end					
 
 					local level = tonumber(hcdeath.playerLevel)
 					local class = RAID_CLASS_COLORS[strupper(hcdeath.playerClass)] or { r = 1, g = .5, b = 0 }
@@ -498,7 +539,7 @@ end
 
 function HCDeath:RemoveDeath(name)
 	for i, hcdeath in ipairs(deaths) do
-		if hcdeath.playerName == name then
+		if (hcdeath.playerName == name) or (hcdeath.killerName == name) then
 			table.remove(deaths, i)			
 			break
 		end
@@ -511,7 +552,7 @@ end
 
 function HCDeath:RemovePlayerDeath(name)
 	for i, hcdeath in ipairs(HCDeaths) do
-		if hcdeath.playerName == name then
+		if (hcdeath.playerName == name) or (hcdeath.killerName == name) then
 			table.remove(HCDeaths, i)
 			break
 		end
@@ -601,6 +642,7 @@ function HCDeath:SendWho()
 end
 
 function HCDeath:whoPlayer(player, level, zone)
+	queriedPlayer = nil
 	local filter
     
 	if player and zone then
@@ -612,8 +654,12 @@ function HCDeath:whoPlayer(player, level, zone)
 	end
 
 	if filter then
+		queriedPlayer = player
 		SendWho(filter)
+		-- HCDeath:print("DEBUG: queriedPlayer: "..queriedPlayer)
 		queried = true
+		queryTimer.time = GetTime()
+		queryTimer:Show()
 	else
 		queried = nil
 	end
@@ -788,7 +834,7 @@ function ChatFrame_OnEvent(event)
 				for _, hcdeath in pairs(deaths) do
 					if (result == hcdeath.playerName) or (result == hcdeath.killerName) then
 						break
-					end				
+					end
 				end
 			end
 
@@ -797,6 +843,8 @@ function ChatFrame_OnEvent(event)
 					HCDeath:QueryPlayer()
 					return
 				else
+					-- HCDeath:print("DEBUG: logged")
+					queryTimer.time = nil
 					logged = nil
 					queried = nil
 					HCDeath:Toast()
@@ -822,6 +870,7 @@ function HCDeath:reset()
 	HCDeaths_Settings.toastscale = 1
 	HCDeaths_Settings.logscale = 1
 	HCDeaths_Settings.toasttime = 10
+	HCDeaths_Settings.progress = true
 
 	HCDeath:ToastScale()
 	HCDeathsToast:SetUserPlaced(false)
@@ -890,6 +939,14 @@ local function HCDeaths_commands(msg, editbox)
 			HCDeaths_Settings.toast = true
 		end
 		message(HCDeaths_Settings.toast, "toast")
+	elseif msg == "progress" then
+		if HCDeaths_Settings.progress then
+			HCDeaths_Settings.progress = false
+		else
+			HCDeaths_Settings.progress = true
+		end
+		message(HCDeaths_Settings.progress, "progress toast")
+		HCDeath:ToggleLog()
 	elseif msg == "color" then
 		if HCDeaths_Settings.color then
 			HCDeaths_Settings.color = false
@@ -943,6 +1000,7 @@ local function HCDeaths_commands(msg, editbox)
 		HCDeath:print("/hcd toast - toggle toast popups")
 		HCDeath:print("/hcd toast scale num - sets the toast popup scale to num")
 		HCDeath:print("/hcd toast time num - sets the number of seconds the toast will display to num")
+		HCDeath:print("/hcd progress - toggle level progress toasts")
 		HCDeath:print("/hcd color - toggle toast ring colors")
 		HCDeath:print("/hcd deathsound - toggle toast deathsounds")
 		HCDeath:print("/hcd levelsound - toggle toast levelsounds")
@@ -974,8 +1032,8 @@ do
 	HCDeathsLog.title = HCDeathsLog:CreateFontString(nil, "LOW", "GameFontNormal")
 	-- HCDeathsLog.title:SetPoint("TOPLEFT", HCDeathsLog, "TOPLEFT", 8, -7)
 	HCDeathsLog.title:SetPoint("TOP", HCDeathsLog, "TOP", 0, -7)
-	HCDeathsLog.title:SetText("HCDeaths")
-	HCDeathsLog.title:SetTextColor(1, .5, 0, 1)
+	HCDeathsLog.title:SetText("Hardcore Deaths")
+	HCDeathsLog.title:SetTextColor(.5, .5, .5, 1)
   
 	HCDeathsLog.scrollframe = CreateFrame("ScrollFrame", "HCDeathsLogScrollframe", HCDeathsLog, "UIPanelScrollFrameTemplate")
 	HCDeathsLog.scrollframe:SetHeight(max_height + 20)
@@ -1264,18 +1322,18 @@ function HCDeath:LogScale()
 	HCDeathsLog:SetScale(HCDeaths_Settings.logscale)
 end
 
-HCDeath:RegisterEvent("ADDON_LOADED")
+HCDeath:RegisterEvent("PLAYER_ENTERING_WORLD")
 HCDeath:SetScript("OnEvent", function()
-    if event == "ADDON_LOADED" then
-        if not this.loaded then
-            this.loaded = true
-            SLASH_HCDEATHS1 = "/hcdeaths"
-            SLASH_HCDEATHS2 = "/hcd"
-            SlashCmdList["HCDEATHS"] = HCDeaths_commands
-			HCDeath:ToastScale()
-			HCDeath:ToggleLog()			
-			HCDeath:print("HCDeaths Loaded! /hcdeaths or /hcd")
-		end
+	if not this.loaded then
+		this.loaded = true
+		SLASH_HCDEATHS1 = "/hcdeaths"
+		SLASH_HCDEATHS2 = "/hcd"
+		SlashCmdList["HCDEATHS"] = HCDeaths_commands
+		HCDeath:Check_pfUI()
+		HCDeath:setupToast()
+		HCDeath:ToastScale()
+		HCDeath:ToggleLog()			
+		HCDeath:print("HCDeaths Loaded! /hcdeaths or /hcd")
 	end
 end)
 
@@ -1296,3 +1354,4 @@ function HCDeath:toastMove()
 	HCDeath:raceSize()
 	HCDeathsToast:Show()
 end
+
