@@ -208,7 +208,7 @@ queryTimer:SetScript("OnUpdate", function()
 			this.time = nil		
 			logged = nil
 			queried = nil
-			HCDeath:print("DEBUG: query timed out")
+			-- HCDeath:print("DEBUG: query timed out")
 			this:Hide()
 		end
 	end
