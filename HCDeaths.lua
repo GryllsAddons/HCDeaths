@@ -208,7 +208,7 @@ queryTimer:SetScript("OnUpdate", function()
 			this.time = nil		
 			logged = nil
 			queried = nil
-			-- HCDeath:print("DEBUG: query timed out")
+			HCDeath:print("DEBUG: query timed out")
 			this:Hide()
 		end
 	end
@@ -831,11 +831,11 @@ function ChatFrame_OnEvent(event)
 			_, _, result = string.find(arg1,"(%d+) player.- total")
 			if not result then
 				_, _, result = string.find(arg1, "%[(.-)%]")
-				for _, hcdeath in pairs(deaths) do
-					if (result == hcdeath.playerName) or (result == hcdeath.killerName) then
-						break
-					end
-				end
+				-- for _, hcdeath in pairs(deaths) do
+				-- 	if (result == hcdeath.playerName) or (result == hcdeath.killerName) then
+				-- 		break
+				-- 	end
+				-- end
 			end
 
 			if result then
@@ -946,7 +946,6 @@ local function HCDeaths_commands(msg, editbox)
 			HCDeaths_Settings.progress = true
 		end
 		message(HCDeaths_Settings.progress, "progress toast")
-		HCDeath:ToggleLog()
 	elseif msg == "color" then
 		if HCDeaths_Settings.color then
 			HCDeaths_Settings.color = false
