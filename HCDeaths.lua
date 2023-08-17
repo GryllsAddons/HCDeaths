@@ -214,9 +214,9 @@ queryTimer:SetScript("OnUpdate", function()
 	end
 end)
 
-function HCDeath:setupToast()
+do
 	-- toast
-	HCDeathsToast = CreateFrame("Button", "HCDeathsToast", HCDeath)
+	local HCDeathsToast = CreateFrame("Button", "HCDeathsToast", HCDeath)
 	HCDeathsToast:SetWidth(twidth)
 	HCDeathsToast:SetHeight(theight)
 	HCDeathsToast:Hide()
@@ -1012,7 +1012,7 @@ do
 	local max_width = 205
 	local max_height = 56
   
-	local HCDeathsLog = CreateFrame("Button", "HCDeathsLog", UIParent)
+	local HCDeathsLog = CreateFrame("Button", "HCDeathsLog", HCDeath)
 	HCDeathsLog:Hide()
 
 	HCDeathsLog:SetWidth(max_width-20)
@@ -1329,7 +1329,6 @@ HCDeath:SetScript("OnEvent", function()
 		SLASH_HCDEATHS2 = "/hcd"
 		SlashCmdList["HCDEATHS"] = HCDeaths_commands
 		HCDeath:Check_pfUI()
-		HCDeath:setupToast()
 		HCDeath:ToastScale()
 		HCDeath:ToggleLog()			
 		HCDeath:print("HCDeaths Loaded! /hcdeaths or /hcd")
