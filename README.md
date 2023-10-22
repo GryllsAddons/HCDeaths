@@ -1,8 +1,11 @@
+
 # HCDeaths
 
 This addon displays and logs hardcore deaths.   
 You can move the toast or log by holding ctrl and shift and dragging.    
 You can reset the toast or log position by holding ctrl and shift and right clicking.    
+
+### Please note that recently TWoW had implemented a severe limit on how you can use the /who command which severely impacts this addon. The addon's functionality will be limited until the next addon update. 
 
 ## Commands:
 - /hcd message - toggle system death messages
