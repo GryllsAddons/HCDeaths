@@ -5,7 +5,6 @@ This addon displays and logs hardcore deaths.
 You can move the toast or log by holding ctrl and shift and dragging.    
 You can reset the toast or log position by holding ctrl and shift and right clicking.    
 
-### Please note that recently TWoW has implemented a severe limit on how you can use the /who command which impacts this addon. The addon's functionality will be limited until the next addon update. 
 
 ## Commands:
 - /hcd message - toggle system death messages
@@ -19,7 +18,6 @@ You can reset the toast or log position by holding ctrl and shift and right clic
 - /hcd color - toggle toast ring colors
 - /hcd deathsound - toggle toast deathsounds
 - /hcd levelsound - toggle toast levelsounds
-- /hcd roar - death roars instead of raid alert
 - /hcd reset - reset settings
 
 ## Screenshots:
@@ -40,20 +38,17 @@ Example of an entry in SavedVariables\HCDeaths.lua:
 
 ```
 	[1] = {
-		["playerGuild"] = "Still Alive",
-		["stime"] = "16:49:00",
-		["killerName"] = "Defias Trapper",
-		["lastWords"] = "any tent in GS?",
-		["killerClass"] = "NPC",
-		["playerName"] = "Kithix",
-		["killerGuild"] = "nil",
-		["killerRace"] = "nil",
-		["playerClass"] = "Priest",
-		["zone"] = "Westfall",
-		["playerRace"] = "High Elf",
-		["killerLevel"] = "12",
-		["playerLevel"] = 15,
+		["zone"] = "Elwynn Forest",
+		["stime"] = "01:41:46",
+		["killerName"] = "Natural Causes",
+		["killerClass"] = "ENV",
+		["killerLevel"] = "nil",
+		["lastWords"] = "nil",
+		["playerClass"] = "Rogue",
+		["playerLevel"] = 10,
+		["sdate"] = "2023/11/06",
+		["hcType"] = "HC",
+		["playerName"] = "Tents",
 		["deathType"] = "PVE",
-		["sdate"] = "2023/05/29",
 	},
 ```
