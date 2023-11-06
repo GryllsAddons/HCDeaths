@@ -9,137 +9,10 @@ HCDeaths_Settings = {
 	log = true,
 	toast = true,
 	color = false,
-	deathsound = true,
 	levelsound = true,
-	roar = false,
 	toastscale = 1,
 	logscale = 1,
 	toasttime = 10,
-	progress = true,
-}
-
-local deathsound = {
-	["Dwarf"] = {
-		[1] = "Sound\\Character\\Dwarf\\DwarfFemale\\Emote\\DwarfFemale_Roar01.wav",
-		[2] = "Sound\\Character\\Dwarf\\DwarfMale\\Emote\\DwarfMale_Roar02.wav",
-	},
-
-	["Gnome"] = {
-		[1] = "Sound\\Character\\Gnome\\GnomeFemale\\Emote\\GnomeFemale_Roar01.wav",
-		[2] = "Sound\\Character\\Gnome\\GnomeMale\\Emote\\GnomeMale_Roar01.wav",
-	},
-
-	["Goblin"] = {
-		[1] = "Sound\\Character\\Goblin\\GoblinFemale\\Emote\\GoblinFemale_Roar01.ogg",
-		[2] = "Sound\\Character\\Goblin\\GoblinMale\\Emote\\GoblinMale_Roar02.wav",
-	},
-		
-	["High Elf"] = {
-		[1] = "Sound\\Character\\HighElf\\HighElfFemale\\Emote\\HighElfFemale_Roar01.wav",
-		[2] = "Sound\\Character\\HighElf\\HighElfMale\\Emote\\HighElfMale_Roar01.wav",		
-	},
-
-	["Human"] = {
-		[1] = "Sound\\Character\\Human\\HumanFemale\\Emote\\HumanFemale_Roar01.wav",
-		[2] = "Sound\\Character\\Human\\HumanMale\\Emote\\HumanMale_Roar02.wav",
-	},
-	
-	["Night Elf"] = {
-		[1] = "Sound\\Character\\NightElf\\NightElfFemale\\Emote\\NightElfFemale_Roar01.wav",
-		[2] = "Sound\\Character\\NightElf\\NightElfMale\\Emote\\NightElfMale_Roar02.wav",
-	},
-
-	["Orc"] = {
-		[1] = "Sound\\Character\\Orc\\OrcFemale\\Emote\\OrcFemale_Roar01.wav",
-		[2] = "Sound\\Character\\Orc\\OrcMale\\Emote\\OrcMale_Roar01.wav",
-	},
-
-	["Tauren"] = {
-		[1] = "Sound\\Character\\Tauren\\TaurenFemale\\Emote\\TaurenFemale_Roar01.wav",
-		[2] = "Sound\\Character\\Tauren\\TaurenMale\\Emote\\TaurenMale_Roar01.wav",
-	},
-
-	["Troll"] = {
-		[1] = "Sound\\Character\\Troll\\TrollFemale\\Emote\\TrollFemale_Roar01.wav",
-		[2] = "Sound\\Character\\Troll\\TrollMale\\Emote\\TrollMale_Roar02.wav",
-	},
-
-	["Undead"] = {
-		[1] = "Sound\\Character\\Undead\\UndeadFemale\\Emote\\UndeadFemale_Roar01.wav",
-		[2] = "Sound\\Character\\Undead\\UndeadMale\\Emote\\UndeadMale_Roar02.wav",
-	},
-}
-
-local progress = {
-	["Dwarf"] = {		
-		[1] = "\\Sound\\Character\\Dwarf\\DwarfVocalFemale\\DwarfFemaleCheer01.wav",
-		[2] = "\\Sound\\Character\\Dwarf\\DwarfVocalFemale\\DwarfFemaleCheer02.wav",
-		[3] = "\\Sound\\Character\\Dwarf\\DwarfVocalMale\\DwarfMaleCheer01.wav",
-		[4] = "\\Sound\\Character\\Dwarf\\DwarfVocalMale\\DwarfMaleCheer02.wav",
-	},
-
-	["Gnome"] = {
-		[1] = "\\Sound\\Character\\Gnome\\GnomeVocalFemale\\GnomeFemaleCheer01.wav",
-		[2] = "\\Sound\\Character\\Gnome\\GnomeVocalFemale\\GnomeFemaleCheer02.wav",
-		[3] = "\\Sound\\Character\\Gnome\\GnomeVocalMale\\GnomeMaleCheer01.wav",
-		[4] = "\\Sound\\Character\\Gnome\\GnomeVocalMale\\GnomeMaleCheer02.wav",
-	},
-
-	["Goblin"] = {
-		[1] = "Sound\\Character\\Goblin\\GoblinFemale\\Emote\\GoblinFemale_Cheer01.ogg",
-		[2] = "Sound\\Character\\Goblin\\GoblinFemale\\Emote\\GoblinFemale_Cheer02.ogg",
-		[3] = "Sound\\Character\\Goblin\\GoblinMale\\Emote\\GoblinMale_Cheer01.wav",
-		[4] = "Sound\\Character\\Goblin\\GoblinMale\\Emote\\GoblinMale_Cheer02.wav",
-	},
-		
-	["High Elf"] = {
-		[1] = "Sound\\Character\\HighElf\\HighElfFemale\\Emote\\HighElfFemale_Cheer01.wav",
-		[2] = "Sound\\Character\\HighElf\\HighElfFemale\\Emote\\HighElfFemale_Cheer03.wav",
-		[3] = "Sound\\Character\\HighElf\\HighElfMale\\Emote\\HighElfMale_Cheer01.wav",
-		[4] = "Sound\\Character\\HighElf\\HighElfMale\\Emote\\HighElfMale_Cheer02.wav",
-	},
-
-	["Human"] = {
-		[1] = "Sound\\Character\\Human\\HumanVocalFemale\\HumanFemaleCheer01.wav",
-		[2] = "Sound\\Character\\Human\\HumanVocalFemale\\HumanFemaleCheer02.wav",
-		[3] = "Sound\\Character\\Human\\HumanVocalMale\\HumanMaleCheer01.wav",
-		[4] = "Sound\\Character\\Human\\HumanVocalMale\\HumanMaleCheer02.wav",
-	},
-	
-	["Night Elf"] = {
-		[1] = "Sound\\Character\\NightElf\\NightElfVocalFemale\\NightElfFemaleCheer01.wav",
-		[2] = "Sound\\Character\\NightElf\\NightElfVocalFemale\\NightElfFemaleCheer02.wav",
-		[3] = "Sound\\Character\\NightElf\\NightElfVocalMale\\NightElfMaleCheer01.wav",
-		[4] = "Sound\\Character\\NightElf\\NightElfVocalMale\\NightElfMaleCheer02.wav",
-	},
-
-	["Orc"] = {
-		[1] = "Sound\\Character\\Orc\\OrcVocalFemale\\OrcFemaleCheer01.wav",
-		[2] = "Sound\\Character\\Orc\\OrcVocalFemale\\OrcFemaleCheer02.wav",
-		[3] = "Sound\\Character\\Orc\\OrcVocalMale\\OrcMaleCheer01.wav",
-		[4] = "Sound\\Character\\Orc\\OrcVocalMale\\OrcMaleCheer02.wav",
-	},
-
-	["Tauren"] = {
-		[1] = "Sound\\Character\\Tauren\\TaurenVocalFemale\\TaurenFemaleCheer01.wav",
-		[2] = "Sound\\Character\\Tauren\\TaurenVocalFemale\\TaurenFemaleCheer02.wav",
-		[3] = "Sound\\Character\\Tauren\\TaurenVocalMale\\TaurenMaleCheer01.wav",
-		[4] = "Sound\\Character\\Tauren\\TaurenVocalMale\\TaurenMaleCheer02.wav",
-	},
-
-	["Troll"] = {
-		[1] = "Sound\\Character\\Troll\\TrollVocalFemale\\TrollFemaleCheer01.wav",
-		[2] = "Sound\\Character\\Troll\\TrollVocalFemale\\TrollFemaleCheer02.wav",
-		[3] = "Sound\\Character\\Troll\\TrollVocalMale\\TrollMaleCheer01.wav",
-		[4] = "Sound\\Character\\Troll\\TrollVocalMale\\TrollMaleCheer02.wav",
-	},
-
-	["Undead"] = {
-		[1] = "Sound\\Character\\Scourge\\ScourgeVocalFemale\\UndeadFemaleCheer01.wav",
-		[2] = "Sound\\Character\\Scourge\\ScourgeVocalFemale\\UndeadFemaleCheer02.wav",
-		[3] = "Sound\\Character\\Scourge\\ScourgeVocalMale\\UndeadMaleCheer01.wav",
-		[4] = "Sound\\Character\\Scourge\\ScourgeVocalMale\\UndeadMaleCheer02.wav",
-	},
 }
 
 local instances = {
@@ -184,35 +57,9 @@ HCDeaths_LastWords = {}
 
 local media = "Interface\\Addons\\HCDeaths\\media\\"
 local deaths = {}
-local queried
-local queriedPlayer
-local logged
 local toastMove -- state of toast moving
-
 local is_pfUI
-
 local twidth, theight = 332.8, 166.4
-
-local queryTimer = CreateFrame("Frame", nil, HCDeath)
-queryTimer.timeout = 1
-queryTimer:Hide()
-queryTimer:SetScript("OnUpdate", function()
-	if (not queried) or (not this.time) then 
-		this:Hide()
-	elseif GetTime() >= this.time + this.timeout then
-		if not result then
-			HCDeath:RemoveDeath(queriedPlayer)
-			HCDeath:RemovePlayerDeath(queriedPlayer)
-			HCDeath:updateLog(true)
-			-- reset
-			this.time = nil		
-			logged = nil
-			queried = nil
-			-- HCDeath:print("DEBUG: query timed out")
-			this:Hide()
-		end
-	end
-end)
 
 do
 	-- toast
@@ -223,10 +70,10 @@ do
 
 	-- texture
 	HCDeath.texture = HCDeathsToast:CreateTexture(nil,"LOW")
-	HCDeath.texture:SetAllPoints(HCDeathsToast)	
+	HCDeath.texture:SetAllPoints(HCDeathsToast)
 
-	HCDeath.race = HCDeathsToast:CreateTexture(nil,"BACKGROUND")
-	HCDeath.race:SetPoint("CENTER", HCDeath.texture, "CENTER", -43, -24)
+	HCDeath.type = HCDeathsToast:CreateTexture(nil,"BACKGROUND")
+	HCDeath.type:SetPoint("CENTER", HCDeath.texture, "CENTER", -43, -24)
 
 	HCDeath.class = HCDeathsToast:CreateTexture(nil,"BACKGROUND")
 	HCDeath.class:SetPoint("CENTER", HCDeath.texture, "CENTER", 0, 10)
@@ -245,13 +92,9 @@ do
 
 	outline = "THINOUTLINE"
 
-	HCDeath.guild = HCDeathsToast:CreateFontString(nil, "LOW", "GameFontNormal")	
-	HCDeath.guild:SetWidth(HCDeath.texture:GetWidth())
-	HCDeath.guild:SetFont(font, size-1, outline)
-
-	HCDeath.location = HCDeathsToast:CreateFontString(nil, "LOW", "GameFontNormal")	
-	HCDeath.location:SetWidth(HCDeath.texture:GetWidth()*1.5)
-	HCDeath.location:SetFont(font, size, outline)
+	HCDeath.zone = HCDeathsToast:CreateFontString(nil, "LOW", "GameFontNormal")	
+	HCDeath.zone:SetWidth(HCDeath.texture:GetWidth()*1.5)
+	HCDeath.zone:SetFont(font, size, outline)
 
 	HCDeath.death = HCDeathsToast:CreateFontString(nil, "LOW", "GameFontNormal")	
 	HCDeath.death:SetWidth(HCDeath.texture:GetWidth()*1.5)
@@ -261,28 +104,18 @@ do
 	HCDeath.lastwords:SetWidth(HCDeath.texture:GetWidth())
 	HCDeath.lastwords:SetFont(font, size, outline)
 	HCDeath.lastwords:SetTextColor(.5,.5,.5)
-	
-	-- HCDeath.quote = HCDeathsToast:CreateFontString(nil, "LOW", "GameFontNormal")
-	-- HCDeath.quote:SetPoint("TOP", HCDeath.death, "BOTTOM", 0, -10)
-	-- HCDeath.quote:SetWidth(HCDeath.texture:GetWidth()*1.5)
-	-- HCDeath.quote:Hide()
-	-- HCDeath.quote:SetFont("Fonts\\SKURRI.TTF", size, outline)
 
 	if is_pfUI then
-		HCDeath.texture:SetTexture(media.."Ring\\".."Ring_pfUI")		
-		HCDeath.name:SetPoint("TOP", HCDeath.texture, "CENTER", 0, -44)
-		HCDeath.guild:SetPoint("TOP", HCDeath.name, "BOTTOM", 0, -2)
-		HCDeath.location:SetPoint("TOP", HCDeath.guild, "BOTTOM", 0, -10)
-		HCDeath.death:SetPoint("TOP", HCDeath.location, "BOTTOM", 0, -5)		
-		HCDeath.lastwords:SetPoint("TOP", HCDeath.death, "BOTTOM", 0, -10)
+		HCDeath.texture:SetTexture(media.."Ring\\".."Ring_pfUI")
 	else
 		HCDeath.texture:SetTexture(media.."Ring\\".."Ring")
-		HCDeath.name:SetPoint("TOP", HCDeath.texture, "CENTER", 0, -44)
-		HCDeath.guild:SetPoint("TOP", HCDeath.name, "BOTTOM", 0, -12)
-		HCDeath.location:SetPoint("TOP", HCDeath.guild, "BOTTOM", 0, -10)
-		HCDeath.death:SetPoint("TOP", HCDeath.location, "BOTTOM", 0, -5)		
-		HCDeath.lastwords:SetPoint("TOP", HCDeath.death, "BOTTOM", 0, -10)
 	end
+
+	HCDeath.name:SetPoint("TOP", HCDeath.texture, "CENTER", 0, -44)
+	HCDeath.zone:SetPoint("TOP", HCDeath.name, "BOTTOM", 0, -14)
+	HCDeath.death:SetPoint("TOP", HCDeath.zone, "BOTTOM", 0, -5)		
+	HCDeath.lastwords:SetPoint("TOP", HCDeath.death, "BOTTOM", 0, -10)
+	
 
 	HCDeathsToast:SetMovable(true)
 	HCDeathsToast:SetClampedToScreen(true)
@@ -337,15 +170,15 @@ function HCDeath:classSize()
 	HCDeath.class:SetHeight(s)
 end
 
-function HCDeath:raceSize()
+function HCDeath:typeSize()
 	local s = 25
-	HCDeath.race:SetWidth(s)
-	HCDeath.race:SetHeight(s)
+	HCDeath.type:SetWidth(s)
+	HCDeath.type:SetHeight(s)
 end
 
 function HCDeath:showToast()
 	HCDeath:classSize()
-	HCDeath:raceSize()
+	HCDeath:typeSize()
 	HCDeathsToast:Show()
 
 	toastTimer.time = GetTime() + HCDeaths_Settings.toasttime
@@ -357,8 +190,7 @@ function HCDeath:hideToast()
 
 	HCDeath.name:SetText("")
 	HCDeath.level:SetText("")
-	HCDeath.guild:SetText("")
-	HCDeath.location:SetText("")
+	HCDeath.zone:SetText("")
 	HCDeath.death:SetText("")
 	HCDeath.lastwords:SetText("")
 	-- HCDeath.quote:SetText("")
@@ -389,18 +221,12 @@ end
 
 function HCDeath:color(level)
 	HCDeath:texColor(level)
-	HCDeath.guild:SetTextColor(116/255, 113/255, 255/255) -- #7471FF
 end
 
-function HCDeath:sound(deathType, playerRace, playerLevel)
+function HCDeath:sound(deathType, playerLevel)
 	if (deathType == "PVP" or deathType == "PVE") then
 		if HCDeaths_Settings.deathsound then
-			if HCDeaths_Settings.roar then
-				local num = math.random(1, 2)
-				PlaySoundFile(deathsound[playerRace][num])
-			else
-				PlaySoundFile("Sound/interface/RaidWarning.wav")
-			end
+			PlaySoundFile("Sound/interface/RaidWarning.wav")
 		end
 	else		
 		if HCDeaths_Settings.levelsound then
@@ -411,9 +237,6 @@ function HCDeath:sound(deathType, playerRace, playerLevel)
 			elseif deathType == "INFSTART" then
 				PlaySoundFile("\\Sound\\Creature\\Razuvious\\RAZ_NAXX_AGGRO01.wav")				
 			end
-
-			local num = math.random(1, 4)
-			PlaySoundFile(progress[playerRace][num])
 		end		
 	end
 end
@@ -437,33 +260,26 @@ function HCDeath:Toast()
 					local hex = HCDeath:rgbToHex(class.r, class.g, class.b)
 
 					HCDeath.class:SetTexture(media.."Ring\\"..hcdeath.playerClass)
-					HCDeath.race:SetTexture(media.."Ring\\"..hcdeath.playerRace)
-
+					HCDeath.type:SetTexture(media.."Ring\\"..hcdeath.deathType)
 					HCDeath.level:SetText(hcdeath.playerLevel)
 					HCDeath.name:SetText("|cff"..hex..hcdeath.playerName)
-
-					if hcdeath.playerGuild ~= "nil" then
-						HCDeath.guild:SetText("<"..hcdeath.playerGuild..">")
-					else
-						HCDeath.guild:SetText("")
-					end
 
 					if hcdeath.deathType == "LVL" then
 						HCDeath.death:SetText("")
 						if level == 60 then
-							HCDeath.location:SetText("Has transcended death and reached level 60!")
+							HCDeath.zone:SetText("Has transcended death and reached level 60!")
 							-- HCDeath.quote:SetText("They shall henceforth be known as the Immortal")
 						else
-							HCDeath.location:SetText("Has reached level "..level.."!")
+							HCDeath.zone:SetText("Has reached level "..level.."!")
 							-- HCDeath.quote:SetText("Their ascendance towards immortality continues")
 						end
 					elseif hcdeath.deathType == "INFSTART" then
 						HCDeath.death:SetText("")
-						HCDeath.location:SetText("Has begun the Inferno Challenge!")
+						HCDeath.zone:SetText("Has begun the Inferno Challenge!")
 					else
 						-- local locHex = HCDeath:locHex(hcdeath.zone)		
-						-- HCDeath.location:SetText("Has died in ".."|cff"..locHex..hcdeath.zone)
-						HCDeath.location:SetText("Has died in "..hcdeath.zone)
+						-- HCDeath.zone:SetText("Has died in ".."|cff"..locHex..hcdeath.zone)
+						HCDeath.zone:SetText("Has died in "..hcdeath.zone)
 						HCDeath.name:SetText("|cff"..hex..hcdeath.playerName)
 						if hcdeath.deathType == "PVE" then
 							if hcdeath.killerLevel then
@@ -486,7 +302,7 @@ function HCDeath:Toast()
 						-- HCDeath.quote:SetText("May this sacrifice not be forgotten!")
 					end				
 					
-					HCDeath:sound(hcdeath.deathType, hcdeath.playerRace, level)					
+					HCDeath:sound(hcdeath.deathType,  level)					
 					HCDeath:color(level)
 					HCDeath:showToast()
 					if (hcdeath.deathType == "PVP" or hcdeath.deathType == "PVE") then
@@ -537,7 +353,7 @@ function HCDeath:locTex(dtype, hctype, location)
 	end
 end
 
-function HCDeath:RemoveDeath(name)
+function HCDeath:RemoveDeath(name) -- Called by Toast
 	for i, hcdeath in ipairs(deaths) do
 		if (hcdeath.playerName == name) or (hcdeath.killerName == name) then
 			table.remove(deaths, i)			
@@ -550,7 +366,7 @@ function HCDeath:RemoveDeath(name)
 	end
 end
 
-function HCDeath:RemovePlayerDeath(name)
+function HCDeath:RemovePlayerDeath(name) -- Called by Toast
 	for i, hcdeath in ipairs(HCDeaths) do
 		if (hcdeath.playerName == name) or (hcdeath.killerName == name) then
 			table.remove(HCDeaths, i)
@@ -559,41 +375,25 @@ function HCDeath:RemovePlayerDeath(name)
 	end
 end
 
-function HCDeath:GetWhoInfo(player)
-    local numWhos = GetNumWhoResults()
-	for i=0, numWhos do
-        local name, guild, level, race, class, zone = GetWhoInfo(i)
-		if (name == player) then
-			if guild == "" then
-				return "nil", level, race, class, zone
-			else
-				return guild, level, race, class, zone
-			end
-		end
-	end
-end
-
-function HCDeath:QueryPlayer()
+function HCDeath:LogDeath() -- Called by add friend system message
 	for _, hcdeath in pairs(deaths) do
 		if not hcdeath.playerClass then
-			hcdeath.playerGuild, hcdeath.playerLevel, hcdeath.playerRace, hcdeath.playerClass, hcdeath.zone = HCDeath:GetWhoInfo(hcdeath.playerName)
+			hcdeath.playerLevel, hcdeath.playerClass, hcdeath.zone = HCDeath:GetFriendInfo(hcdeath.playerName)
+
 			if (hcdeath.deathType ~= "PVP") and hcdeath.playerClass then
-				hcdeath.info = true
-			elseif (hcdeath.deathType == "PVP") and (not hcdeath.killerClass) then
-				HCDeath:whoPlayer(hcdeath.killerName, _, hcdeath.zone)
-				return
+				hcdeath.info = true			
 			end
 		end
 
-		if (hcdeath.deathType == "PVP") and (not hcdeath.killerClass) then
-			hcdeath.killerGuild, hcdeath.killerLevel, hcdeath.killerRace, hcdeath.killerClass = HCDeath:GetWhoInfo(hcdeath.killerName)
+		if (hcdeath.deathType == "PVP") and hcdeath.playerClass and (not hcdeath.killerClass) then
+			hcdeath.killerLevel, hcdeath.killerClass = HCDeath:GetFriendInfo(hcdeath.killerName)
 			if hcdeath.killerClass then
 				hcdeath.info = true
 			end
 		end
 
 		if hcdeath.info then
-			logged = true
+			-- check if we already have a death for the player, if we do don't log
 			local match
 			for _, death in pairs(HCDeaths) do
 				if death.playerName == hcdeath.playerName then
@@ -615,53 +415,96 @@ function HCDeath:QueryPlayer()
 					playerName = hcdeath.playerName,
 					playerLevel = hcdeath.playerLevel,
 					playerClass = hcdeath.playerClass,
-					playerRace = hcdeath.playerRace,
-					playerGuild = tostring(hcdeath.playerGuild),
 					killerName = tostring(hcdeath.killerName),
 					killerLevel = tostring(hcdeath.killerLevel),
-					killerClass = tostring(hcdeath.killerClass),
-					killerRace = tostring(hcdeath.killerRace),
-					killerGuild = tostring(hcdeath.killerGuild)
+					killerClass = tostring(hcdeath.killerClass)
 				})
-
-				-- HCDeath:print("DEBUG: logged")
 			end
+			
+			-- Remove friends				
+			if HCDeath:AddedFriend(hcdeath.addedPlayer) then
+				RemoveFriend(hcdeath.playerName)
+			else
+				-- already a friend
+				if (hcdeath.deathType ~= "PVP") then
+					HCDeath:Toast()
+				end
+			end
+
+			if HCDeath:AddedFriend(hcdeath.addedKiller) then
+				RemoveFriend(hcdeath.killerName)
+			else
+				-- already a friend
+				if (hcdeath.deathType == "PVP") then
+					HCDeath:Toast()
+				end
+			end
+
 		end
 	end
 end
 
-function HCDeath:SendWho()
-	if not queried then
-		for _, hcdeath in pairs(deaths) do
-			if not hcdeath.info then
-				HCDeath:whoPlayer(hcdeath.playerName, hcdeath.playerLevel)				
-				break
-			end
+function HCDeath:GetFriendInfo(player)
+	-- name, level, class, area, connected, status, note = GetFriendInfo(friendIndex)
+	for i=0, GetNumFriends() do
+		local name, level, class, zone = GetFriendInfo(i)
+		if (name == player) then
+			return level, class, zone
 		end
 	end
 end
 
-function HCDeath:whoPlayer(player, level, zone)
-	queriedPlayer = nil
-	local filter
-    
-	if player and zone then
-		filter = "n-"..player.." ".."z-"..zone
-	elseif player and level then
-		filter = "n-"..player.." "..level
-	elseif player then
-		filter = "n-"..player
-	end
+function HCDeath:AddFriends()
+	for _, hcdeath in pairs(deaths) do
+		if not HCDeath:isFriend(hcdeath.playerName) then
+			AddFriend(hcdeath.playerName)
+		else
+			-- player is already your friend
+			-- if pve death we can log, else we need to add the killer
+			if (hcdeath.deathType == "PVE") then
+				HCDeath:LogDeath()
+			end
+		end
 
-	if filter then
-		queriedPlayer = player
-		SendWho(filter)
-		-- HCDeath:print("DEBUG: queriedPlayer: "..queriedPlayer)
-		queried = true
-		queryTimer.time = GetTime()
-		queryTimer:Show()
+		if (hcdeath.deathType == "PVP") then
+			if not HCDeath:isFriend(hcdeath.killerName) then
+				AddFriend(hcdeath.killerName)
+			else
+				-- player is already your friend
+				HCDeath:LogDeath()
+			end
+		end		
+	end
+end
+
+function HCDeath:AddedFriend(player)
+	-- returns true if friend was added to deaths table
+	for _, hcdeath in pairs(deaths) do
+		if (hcdeath.playerName == player) or (hcdeath.killerName == player) then
+			return true
+		end
+	end
+end
+
+function HCDeath:isFriend(player)
+	for i=1, GetNumFriends() do
+		local name = GetFriendInfo(i)		
+		if (name == player) then
+			return true
+		end
+	end
+end
+
+function HCDeath:friendSlots()
+	-- the maximum friend limit for a vanilla client is 50
+	-- the addon requires 2 free friend slots to add the player and killer (if pvp death) info
+	local numFriends = GetNumFriends()
+	if (numFriends > 48) then
+		local requiredSlots = 50 - numFriends
+		DEFAULT_CHAT_FRAME:AddMessage("|cfffc5100Unable to log hardcore death due to friend list limit, please remove "..requiredSlots.." friend(s) to enable logging.|r")
+		return false
 	else
-		queried = nil
+		return true
 	end
 end
 
@@ -670,6 +513,16 @@ function HCDeath:systemMessage(message)
 		local info = ChatTypeInfo["SYSTEM"]
 		DEFAULT_CHAT_FRAME:AddMessage(message, info.r, info.g, info.b, info.id)
 	end
+end
+
+local testmsg
+function HCDeath:test(dtype, player, plevel, killer)	
+	if dtype == "pve" then
+		testmsg = "A tragedy has occurred. Hardcore character "..player.." died of natural causes at level "..plevel..". May this sacrifice not be forgotten."
+	elseif dtype == "pvp" then
+		testmsg = "A tragedy has occurred. Hardcore character "..player.." has fallen in PvP to "..killer.." at level "..plevel.."."
+	end
+	SendChatMessage(".server info")
 end
 
 function HCDeath:extractLinks(str)
@@ -683,16 +536,6 @@ function HCDeath:extractLinks(str)
     end
     result = result .. string.sub(str, start)
     return result
-end
-
-local testmsg
-function HCDeath:test(dtype, player, plevel, killer)	
-	if dtype == "pve" then
-		testmsg = "A tragedy has occurred. Hardcore character "..player.." died of natural causes at level "..plevel..". May this sacrifice not be forgotten."
-	elseif dtype == "pvp" then
-		testmsg = "A tragedy has occurred. Hardcore character "..player.." has fallen in PvP to "..killer.." at level "..plevel.."."
-	end
-	SendChatMessage(".server info")
 end
 
 local HookChatFrame_OnEvent = ChatFrame_OnEvent
@@ -722,12 +565,20 @@ function ChatFrame_OnEvent(event)
 		-- [PLAYERNAME]: Level PLAYERLEVEL PLAYERRACE PLAYERCLASS <PLAYERGUILD> - AREA
 		-- 1 player Total
 
+		-- Example of friend messages:
+		-- PLAYERNAME added to friends
+		-- PLAYERNAME removed from friends
+
 		local _, _, hcprogress = string.find(arg1, "(%a+) has reached level (%d%d) in Hardcore mode")
 		local _, _, hcimmortal = string.find(arg1, "(%a+) has transcended death and reached level 60")
 		local _, _, hcdeath = string.find(arg1,"A tragedy has occurred. Hardcore character (%a+)")
-		local _, _, infstart = string.find(arg1,"(%a+) has begun the Inferno Challenge")
+		-- local _, _, infstart = string.find(arg1,"(%a+) has begun the Inferno Challenge")
 		-- local _, _, infdeath = string.find(arg1,"A tragedy has occurred. Inferno character (%a+)")
 
+		_, _, addedFriend = string.find(arg1,"(%a+) added to friends")
+		_, _, removedFriend = string.find(arg1,"(%a+) removed from friends")
+		_, _, alreadyFriend = string.find(arg1,"(%a+) is already your friend")
+		
 		if hcprogress or hcimmortal then
 			HCDeath:systemMessage(arg1)
 			
@@ -743,13 +594,13 @@ function ChatFrame_OnEvent(event)
 				playerName = playerName,
 				playerLevel = playerLevel,
 				playerClass = nil,
-				playerRace = nil,
-				playerGuild = nil,
 				info = nil
 			})
 
-			HCDeath:SendWho()
-			return
+			if HCDeath:friendSlots() then
+				HCDeath:AddFriends()
+				return
+			end
 		elseif infstart then
 			HCDeath:systemMessage(arg1)
 			
@@ -764,13 +615,13 @@ function ChatFrame_OnEvent(event)
 				playerName = playerName,
 				playerLevel = nil,
 				playerClass = nil,
-				playerRace = nil,
-				playerGuild = nil,
 				info = nil
 			})
 
-			HCDeath:SendWho()
-			return
+			if HCDeath:friendSlots() then
+				HCDeath:AddFriends()
+				return
+			end
 		elseif hcdeath then --or infdeath then
 			HCDeath:systemMessage(arg1)
 
@@ -811,46 +662,28 @@ function ChatFrame_OnEvent(event)
 				playerName = hcdeath,
 				playerLevel = playerLevel,
 				playerClass = nil,
-				playerRace = nil,
-				playerGuild = nil,
 				killerName = killerName,
 				killerLevel = killerLevel,
 				killerClass = killerClass,
-				killerRace = nil,
-				killerGuild = nil,
 				lastWords = nil,
 				info = nil
 			})
 
-			HCDeath:SendWho()
+			if HCDeath:friendSlots() then
+				HCDeath:AddFriends()
+				return
+			end
 			return
 		end
-		
-		if queried then
-			local result
-			_, _, result = string.find(arg1,"(%d+) player.- total")
-			if not result then
-				_, _, result = string.find(arg1, "%[(.-)%]")
-				-- for _, hcdeath in pairs(deaths) do
-				-- 	if (result == hcdeath.playerName) or (result == hcdeath.killerName) then
-				-- 		break
-				-- 	end
-				-- end
-			end
 
-			if result then
-				if not logged then
-					HCDeath:QueryPlayer()
-					return
-				else
-					-- HCDeath:print("DEBUG: logged")
-					queryTimer.time = nil
-					logged = nil
-					queried = nil
-					HCDeath:Toast()
-					return
-				end
+		if addedFriend or alreadyFriend then
+			if HCDeath:AddedFriend(addedFriend) or HCDeath:AddedFriend(alreadyFriend) then
+				HCDeath:LogDeath()
+				return
 			end
+		elseif HCDeath:AddedFriend(removedFriend) then
+			HCDeath:Toast()
+			return
 		end
 	elseif (event == "CHAT_MSG_SAY" or event == "CHAT_MSG_YELL" or event == "CHAT_MSG_GUILD" or event == "CHAT_MSG_PARTY" or event == "CHAT_MSG_RAID" or event == "CHAT_MSG_RAID_LEADER") then
 		HCDeaths_LastWords[arg2] = HCDeath:extractLinks(arg1)
@@ -866,7 +699,6 @@ function HCDeath:reset()
 	HCDeaths_Settings.color = false
 	HCDeaths_Settings.deathsound = true
 	HCDeaths_Settings.levelsound = true
-	HCDeaths_Settings.roar = false
 	HCDeaths_Settings.toastscale = 1
 	HCDeaths_Settings.logscale = 1
 	HCDeaths_Settings.toasttime = 10
@@ -967,13 +799,6 @@ local function HCDeaths_commands(msg, editbox)
 			HCDeaths_Settings.levelsound = true
 		end
 		message(HCDeaths_Settings.levelsound, "levelsound")
-	elseif msg == "roar" then
-		if HCDeaths_Settings.roar then
-			HCDeaths_Settings.roar = false
-		else
-			HCDeaths_Settings.roar = true
-		end
-		message(HCDeaths_Settings.roar, "roar")
 	elseif msg == "move" then
 		if toastMove then
 			toastMove = nil
@@ -987,9 +812,10 @@ local function HCDeaths_commands(msg, editbox)
     elseif msg == "reset" then
         HCDeath:reset()
 		HCDeath:print("settings reset")
-	-- elseif msg == "test" then
-	-- 	HCDeath:test("pve", "Tents", "10")
-	-- 	HCDeath:test("pvp", "player", "level", "killer")
+	elseif msg == "test" then
+		-- HCDeath:test("pve", "player", "level")
+		-- HCDeath:test("pvp", "player", "level", "killer")
+		HCDeath:test("pve", "Tents", "10")
     else
 		HCDeath:print("commands:")
 		HCDeath:print("/hcd message - toggle system death messages")
@@ -1003,13 +829,12 @@ local function HCDeaths_commands(msg, editbox)
 		HCDeath:print("/hcd color - toggle toast ring colors")
 		HCDeath:print("/hcd deathsound - toggle toast deathsounds")
 		HCDeath:print("/hcd levelsound - toggle toast levelsounds")
-		HCDeath:print("/hcd roar - death roars instead of raid alert")
 		HCDeath:print("/hcd reset - reset settings")
     end
 end
 
 do  
-	local max_width = 205
+	local max_width = 185
 	local max_height = 56
   
 	local HCDeathsLog = CreateFrame("Button", "HCDeathsLog", HCDeath)
@@ -1079,10 +904,8 @@ do
 	HCDeathsLog.limit = 50
 	HCDeathsLog.type = {}
 	HCDeathsLog.level = {}
-	HCDeathsLog.name = {}	
-	HCDeathsLog.race = {}
+	HCDeathsLog.name = {}
 	HCDeathsLog.class = {}
-	-- HCDeathsLog.guild = {}
 	HCDeathsLog.background = {}
 
 	for i=1, HCDeathsLog.limit do
@@ -1097,25 +920,15 @@ do
 
 		tinsert(HCDeathsLog.name, HCDeathsLog.container:CreateFontString(nil, "LOW", "GameFontNormal"))
 		HCDeathsLog.name[i]:SetJustifyH("LEFT")
-		
-		tinsert(HCDeathsLog.race, HCDeathsLog.container:CreateTexture(nil,"LOW"))	
-		HCDeathsLog.race[i]:SetWidth(tex)
-		HCDeathsLog.race[i]:SetHeight(tex)
-		HCDeathsLog.race[i]:Hide()
 
 		tinsert(HCDeathsLog.class, HCDeathsLog.container:CreateTexture(nil,"LOW"))
 		HCDeathsLog.class[i]:SetWidth(tex)
 		HCDeathsLog.class[i]:SetHeight(tex)
 		HCDeathsLog.class[i]:Hide()
 
-		-- tinsert(HCDeathsLog.guild, HCDeathsLog.container:CreateFontString(nil, "LOW", "GameFontNormal"))
-		-- HCDeathsLog.guild[i]:SetJustifyH("LEFT")
-		-- HCDeathsLog.guild[i]:SetTextColor(116/255, 113/255, 255/255)
-
 		tinsert(HCDeathsLog.background, CreateFrame("Frame",nil,HCDeathsLog.container))		
 		HCDeathsLog.background[i]:SetBackdrop({ bgFile = "Interface\\Tooltips\\UI-Tooltip-Background" })
 		HCDeathsLog.background[i]:Hide()
-
 		HCDeathsLog.background[i]:EnableMouse(true)	
 		
 		HCDeathsLog.background[i]:SetScript("OnLeave", function()
@@ -1181,19 +994,15 @@ function HCDeath:updateLog()
 		if (hcdeath.deathType == "PVP" or hcdeath.deathType == "PVE") then
 			local dtype = HCDeathsLog.type[limit]		
 			local level = HCDeathsLog.level[limit]
-			local name = HCDeathsLog.name[limit]		
-			local race = HCDeathsLog.race[limit]
+			local name = HCDeathsLog.name[limit]
 			local class = HCDeathsLog.class[limit]
-			-- local guild = HCDeathsLog.guild[limit]
 			local background = HCDeathsLog.background[limit]
 			limit = limit - 1
 
 			dtype:SetPoint("TOPLEFT", HCDeathsLog.container, "TOPLEFT", 0, -yoff)
 			level:SetPoint("TOPLEFT", HCDeathsLog.container, "TOPLEFT", 18, -yoff-2)
 			name:SetPoint("TOPLEFT", HCDeathsLog.container, "TOPLEFT", 40, -yoff-2)
-			race:SetPoint("TOPLEFT", HCDeathsLog.container, "TOPLEFT", 135, -yoff)
-			class:SetPoint("TOPLEFT", HCDeathsLog.container, "TOPLEFT", 155, -yoff)		
-			-- guild:SetPoint("TOPLEFT", HCDeathsLog.container, "TOPLEFT", 180, -yoff)
+			class:SetPoint("TOPLEFT", HCDeathsLog.container, "TOPLEFT", 135, -yoff)
 			
 			-- type
 			-- locTexture
@@ -1209,20 +1018,9 @@ function HCDeath:updateLog()
 			local classhex = HCDeath:rgbToHex(pclass.r, pclass.g, pclass.b)
 			name:SetText("|cff"..classhex..hcdeath.playerName)
 
-			-- race
-			race:SetTexture(media.."Log\\"..hcdeath.playerRace)
-			race:Show()
-
 			-- class
 			class:SetTexture(media.."Log\\"..hcdeath.playerClass)
 			class:Show()
-
-			-- guild
-			-- if hcdeath.playerGuild ~= "nil" then
-			-- 	guild:SetText("<"..hcdeath.playerGuild..">")
-			-- else
-			-- 	guild:SetText("")
-			-- end
 
 			-- background
 			background:SetPoint("TOPLEFT", dtype, "TOPLEFT")
@@ -1248,15 +1046,9 @@ function HCDeath:updateLog()
 					death.b = 0
 				end
 
-				local guildhex = HCDeath:rgbToHex(116/255, 113/255, 255/255)
 				-- player			
 				local pname = "|cff"..classhex..hcdeath.playerName.."|r"
 				local pclass = "|cff"..classhex..hcdeath.playerClass.."|r"
-				local pguild = ""
-				if hcdeath.playerGuild ~= "nil" then
-					pguild = " |cff"..guildhex.."<"..hcdeath.playerGuild..">|r"
-				end
-
 				local locHex = HCDeath:locHex(hcdeath.zone)	
 				local zone = "|cff"..locHex..hcdeath.zone.."|r"
 
@@ -1270,14 +1062,10 @@ function HCDeath:updateLog()
 				local classhex = HCDeath:rgbToHex(kclass.r, kclass.g, kclass.b)				
 				local kname = "|cff"..classhex..hcdeath.killerName.."|r"
 				kclass = "|cff"..classhex..hcdeath.killerClass.."|r"
-				local kguild = ""
-				if hcdeath.killerGuild ~= "nil" then
-					kguild = "|cff"..guildhex.."<"..hcdeath.killerGuild..">|r"
-				end
 				
 				local killer
 				if hcdeath.deathType == "PVP" then
-					killer = kname.." "..kguild..NORMAL_FONT_COLOR_CODE.." the level "..hcdeath.killerLevel.." "..hcdeath.killerRace.." |r"..kclass
+					killer = kname..NORMAL_FONT_COLOR_CODE.." the level "..hcdeath.killerLevel.." |r"..kclass
 				else
 					if hcdeath.killerLevel ~= "nil" then
 						killer = kname..NORMAL_FONT_COLOR_CODE.." level "..hcdeath.killerLevel.."|r"
@@ -1292,7 +1080,7 @@ function HCDeath:updateLog()
 				end
 				GameTooltip:ClearLines()
 				GameTooltip:AddLine(death.type, death.r, death.g, death.b)
-				GameTooltip:AddLine(pname..pguild..NORMAL_FONT_COLOR_CODE.." the level "..hcdeath.playerLevel.." "..hcdeath.playerRace.." |r"..pclass..NORMAL_FONT_COLOR_CODE.." died in |r"..zone..NORMAL_FONT_COLOR_CODE.." to |r"..killer..NORMAL_FONT_COLOR_CODE..". |r"..lastwords,_,_,_,true)
+				GameTooltip:AddLine(pname..NORMAL_FONT_COLOR_CODE.." the level "..hcdeath.playerLevel.." |r"..pclass..NORMAL_FONT_COLOR_CODE.." died in |r"..zone..NORMAL_FONT_COLOR_CODE.." to |r"..killer..NORMAL_FONT_COLOR_CODE..". |r"..lastwords,_,_,_,true)
 				-- GameTooltip:AddLine("Date: "..hcdeath.sdate.." Time: "..hcdeath.stime)
 				GameTooltip:Show()
 			end)
@@ -1338,8 +1126,7 @@ end)
 function HCDeath:toastMove()
 	HCDeath.level:SetText("60")
 	HCDeath.name:SetText("Toast")
-	HCDeath.guild:SetText("<HCDeaths>")
-	HCDeath.location:SetText("Has died in Blackrock Mountains")
+	HCDeath.zone:SetText("Has died in Blackrock Mountains")
 	HCDeath.death:SetText("to Torta level 60")
 	HCDeath.lastwords:SetText('"'.."I like turtles!"..'"')
 	-- HCDeath.quote:SetText("May this sacrifice not be forgotten!")
@@ -1347,9 +1134,8 @@ function HCDeath:toastMove()
 	HCDeath:color(60)
 	HCDeath.texture:SetVertexColor(.75,.75,.75)	
 	HCDeath.class:SetTexture(media.."Ring\\".."Warrior")
-	HCDeath.race:SetTexture(media.."Ring\\".."Human")
+	HCDeath.type:SetTexture(media.."Ring\\".."PVP")
 	HCDeath:classSize()
-	HCDeath:raceSize()
+	HCDeath:typeSize()
 	HCDeathsToast:Show()
 end
-
