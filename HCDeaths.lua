@@ -260,7 +260,14 @@ function HCDeath:Toast()
 					local hex = HCDeath:rgbToHex(class.r, class.g, class.b)
 
 					HCDeath.class:SetTexture(media.."Ring\\"..hcdeath.playerClass)
-					HCDeath.type:SetTexture(media.."Ring\\"..hcdeath.deathType)
+					-- set tyoe texture
+					if (hcdeath.deathType == "PVP" or hcdeath.deathType == "PVE") then
+						HCDeath.type:SetTexture(media.."Ring\\"..hcdeath.deathType)
+					elseif (hcdeath.deathType == "INFSTART") then
+						HCDeath.type:SetTexture(media.."Ring\\".."INFERNO")
+					else
+						HCDeath.type:SetTexture(media.."Ring\\".."LVL")
+					end
 					HCDeath.level:SetText(hcdeath.playerLevel)
 					HCDeath.name:SetText("|cff"..hex..hcdeath.playerName)
 
@@ -422,7 +429,7 @@ function HCDeath:LogDeath() -- Called by add friend system message
 			end
 			
 			-- Remove friends				
-			if HCDeath:AddedFriend(hcdeath.addedPlayer) then
+			if hcdeath.addedPlayer then
 				RemoveFriend(hcdeath.playerName)
 			else
 				-- already a friend
@@ -431,7 +438,7 @@ function HCDeath:LogDeath() -- Called by add friend system message
 				end
 			end
 
-			if HCDeath:AddedFriend(hcdeath.addedKiller) then
+			if hcdeath.addedKiller then
 				RemoveFriend(hcdeath.killerName)
 			else
 				-- already a friend
@@ -458,6 +465,7 @@ function HCDeath:AddFriends()
 	for _, hcdeath in pairs(deaths) do
 		if not HCDeath:isFriend(hcdeath.playerName) then
 			AddFriend(hcdeath.playerName)
+			hcdeath.addedPlayer = true
 		else
 			-- player is already your friend
 			-- if pve death we can log, else we need to add the killer
@@ -469,6 +477,7 @@ function HCDeath:AddFriends()
 		if (hcdeath.deathType == "PVP") then
 			if not HCDeath:isFriend(hcdeath.killerName) then
 				AddFriend(hcdeath.killerName)
+				hcdeath.addedKiller = true
 			else
 				-- player is already your friend
 				HCDeath:LogDeath()
