@@ -231,9 +231,7 @@ function HCDeath:sound(deathType, playerLevel)
 	else		
 		if HCDeaths_Settings.levelsound then
 			if deathType == "LVL" then
-				if playerLevel == 60 then
-					PlaySoundFile("Sound\\Doodad\\G_FireworkLauncher02Custom0.wav")
-				end
+				PlaySoundFile("Sound\\Doodad\\G_FireworkLauncher02Custom0.wav")
 			elseif deathType == "INFSTART" then
 				PlaySoundFile("\\Sound\\Creature\\Razuvious\\RAZ_NAXX_AGGRO01.wav")				
 			end
